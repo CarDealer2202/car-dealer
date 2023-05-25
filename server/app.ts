@@ -1,9 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import config from 'config';
-
 import chalk from 'chalk';
 
+import checkFullnessDB from './helpers/checkFullnessDB';
 import routes from './routes';
 
 const PORT = config.get('port') ?? 8080;
@@ -16,7 +16,9 @@ app.use('/', routes); // base url
 
 const start = async () => {
   try {
-    mongoose.connection.once('open', () => {});
+    mongoose.connection.once('open', () => {
+      checkFullnessDB();
+    });
     await mongoose.connect(config.get('mongoUri'));
     console.log(chalk.cyanBright(`MongoDB connected`));
     app.listen(PORT, () =>
