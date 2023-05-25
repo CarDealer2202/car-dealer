@@ -2,11 +2,24 @@ import express from 'express';
 
 import Car from '../models/Car';
 
+interface Query {
+  brand?: { $regex: RegExp };
+  model?: { $regex: RegExp };
+}
+
 const router = express.Router({ mergeParams: true });
 
 router.get('/', async (request, response) => {
+  const { sort = 'price', order = 'desc', brand, model } = request.query;
   try {
-    const cars = await Car.find();
+    const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
+    const query: Query = {};
+    if (brand) {
+      query.brand = { $regex: new RegExp(`${brand}`, 'i') };
+    } else if (model) {
+      query.model = { $regex: new RegExp(`${model}`, 'i') };
+    }
+    const cars = await Car.find(query).sort({ [sort as string]: orderValue });
 
     response.status(200).send(cars);
   } catch (error) {
