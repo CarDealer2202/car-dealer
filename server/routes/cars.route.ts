@@ -10,7 +10,7 @@ interface Query {
 const router = express.Router({ mergeParams: true });
 
 router.get('/', async (request, response) => {
-  const { sort = 'price', order = 'desc', brand, model } = request.query;
+  const { page = 1, limit = 9, sort = 'name', order = 'asc', brand, model } = request.query;
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
     const query: Query = {};
@@ -19,9 +19,19 @@ router.get('/', async (request, response) => {
     } else if (model) {
       query.model = { $regex: new RegExp(`${model}`, 'i') };
     }
-    const cars = await Car.find(query).sort({ [sort as string]: orderValue });
+    const cars = await Car.find(query)
+      .sort({ [sort as string]: orderValue })
+      .limit(+limit * 1)
+      .skip((+page - 1) * +limit)
+      .exec();
 
-    response.status(200).send(cars);
+    const count = await Car.countDocuments();
+
+    response.status(200).send({
+      cars,
+      totalPages: Math.ceil(count / +limit),
+      currentPage: +page,
+    });
   } catch (error) {
     if (error instanceof Error) {
       response.status(500).json({
