@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 async function getCars() {
-    const cars = await fetch("http://localhost:8080/cars")
+    const cars = await fetch("http://localhost:8080/cars?page=3")
     return cars.json();
     
 }
