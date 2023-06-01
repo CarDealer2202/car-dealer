@@ -14,22 +14,22 @@ const Footer = () =>{
             <div className="right">
             <div className="column">
                 <h3>Магазин</h3>
-                <a href="#">Мой аккаунт</a>
-                <a href="#">Логын</a>
-                <a href="#">Список желаний</a>
+                <a href="#">Мiй аккаунт</a>
+                <a href="#">Логiн</a>
+                <a href="#">Список бажань</a>
                 <a href="#">Корзина</a>
             </div>
             <div className="column">
                 <h3>Про нас</h3>
-                <a href="#">Политика доставки</a>
-                <a href="#">Политика печеньок</a>
-                <a href="#">Части питання</a>
+                <a href="#">Полiтика доставки</a>
+                <a href="#">Полiтика печеньок</a>
+                <a href="#">Частi питання</a>
             </div>
             <div className="column">
-                <h3>Компния</h3>
-                <a href="#">Наша история</a>
-                <a href="#">Политика приватности</a>
-                <a href="#">Звязок з нами</a>
+                <h3>Компaнiя</h3>
+                <a href="#">Наша iсторiя</a>
+                <a href="#">Полiтика приватностi</a>
+                <a href="#">Зв'язок з нами</a>
             </div>
             </div>
         </div>
@@ -41,14 +41,14 @@ const Footer = () =>{
             <div className="right">
                 <img src="country-flag.png" alt="Country Flag"/>
                 <div className="dropdown">
-                    <button className="dropdown-btn">Language</button>
+                    <button className="dropdown-btn">Мова</button>
                     <div className="dropdown-content">
                     <a href="#">English</a>
-                    <a href="#">Ukrainian</a>
+                    <a href="#">УкраЇнська</a>
                 </div>
             </div>
             <div className="dropdown">
-                <button className="dropdown-btn">Currency</button>
+                <button className="dropdown-btn">Валюта</button>
                 <div className="dropdown-content">
                 <a href="#">USD</a>
                 <a href="#">UAH</a>

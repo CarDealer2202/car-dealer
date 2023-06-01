@@ -356,6 +356,7 @@ img{
   border: none;
   outline: none;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .search-button {
@@ -454,7 +455,53 @@ img{
   background-color:#2d2d2d
 }
 
-.car-page{}
+.filter-options {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+}
+
+.filter-column {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(33.33% - 20px);
+  margin-right: 20px;
+  white-space: nowrap;
+}
+
+.filter-column:last-child {
+  margin-right: 0;
+}
+
+h3 {
+  margin-bottom: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
+
+/* Show filter options when button is pressed */
+#filter-button:checked ~ .filter-options {
+  display: block;
+}
+
+.uploadButton {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 20%;
+  margin-top: 20px;
+  font-size: medium;
+}
 
 
 

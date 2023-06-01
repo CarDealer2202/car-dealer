@@ -6,9 +6,9 @@ const Header = () =>{
             <div className="logo">Logo</div>
             <nav>
                 <ul>
-                <li><Link href="/">Golovna</Link></li>
-                <li><Link href="/shop">Shop</Link></li>
-                <li><Link href="/about">About us</Link></li>
+                <li><Link href="/">Головна</Link></li>
+                <li><Link href="/shop">Магазин</Link></li>
+                <li><Link href="/about">Про нас</Link></li>
                 </ul>
             </nav>
             <div className="icons">
