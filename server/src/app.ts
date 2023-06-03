@@ -1,11 +1,11 @@
+import chalk from 'chalk';
+import cors from 'cors';
+import env from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import chalk from 'chalk';
-import env from 'dotenv';
-import cors from 'cors';
 
-import checkFullnessDB from '@/utils/helpers/checkFullnessDB';
 import routes from '@/routes/index';
+import checkFullnessDB from '@/utils/helpers/checkFullnessDB';
 
 env.config();
 
