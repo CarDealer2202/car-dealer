@@ -3,7 +3,8 @@ import { Request, Response } from 'express';
 import Car from '@/models/Car';
 
 interface Query {
-  brand?: { $regex: RegExp };
+  // brand?: { $regex: RegExp };
+  brand?: { $in: RegExp[] };
   model?: { $regex: RegExp };
 }
 
@@ -13,7 +14,8 @@ export const getAllCar = async (request: Request, response: Response): Promise<v
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
     const query: Query = {};
     if (brand) {
-      query.brand = { $regex: new RegExp(`${brand}`, 'i') };
+      const brands = (brand as string).split(',');
+      query.brand = { $in: brands.map((brand) => new RegExp(`^${brand}$`, 'i')) }; // строго марка должна совпадать, но регистр не важен
     } else if (model) {
       query.model = { $regex: new RegExp(`${model}`, 'i') };
     }
