@@ -1,16 +1,21 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import config from 'config';
 import chalk from 'chalk';
+import env from 'dotenv';
+import cors from 'cors';
 
-import checkFullnessDB from './helpers/checkFullnessDB';
-import routes from './routes';
+import checkFullnessDB from '@/utils/helpers/checkFullnessDB';
+import routes from '@/routes/index';
 
-const PORT = config.get('port') ?? 8080;
+env.config();
+
+const PORT = process.env.PORT ?? 8080;
+const databaseURL = process.env.DATABASE_URL ?? '';
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use('/', routes); // base url
 
@@ -19,7 +24,7 @@ const start = async () => {
     mongoose.connection.once('open', () => {
       checkFullnessDB();
     });
-    await mongoose.connect(config.get('mongoUri'));
+    await mongoose.connect(databaseURL);
     console.log(chalk.cyanBright(`MongoDB connected`));
     app.listen(PORT, () =>
       console.log(chalk.cyanBright(`server has been started on port ${PORT}`))

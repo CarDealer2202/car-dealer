@@ -1,5 +1,6 @@
 import { Document, Schema, Model, model } from 'mongoose';
-import { IType } from '../types/type.type';
+
+import { IType } from '@/types/type.type';
 
 export interface TypeModel extends Omit<IType, '_id'>, Document {}
 

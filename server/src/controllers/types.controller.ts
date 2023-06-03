@@ -1,10 +1,8 @@
-import express from 'express';
+import { Request, Response } from 'express';
 
-import Type from '../models/Type.js';
+import Type from '@/models/Type';
 
-const router = express.Router({ mergeParams: true });
-
-router.get('/', async (request, response) => {
+export const getAllTypes = async (request: Request, response: Response) => {
   try {
     const types = await Type.find();
     response.status(200).send(types);
@@ -13,6 +11,4 @@ router.get('/', async (request, response) => {
       message: 'An error occurred while getting machines on the server',
     });
   }
-});
-
-export default router;
+};

@@ -1,15 +1,13 @@
-import express from 'express';
+import { Request, Response } from 'express';
 
-import Car from '../models/Car';
+import Car from '@/models/Car';
 
 interface Query {
   brand?: { $regex: RegExp };
   model?: { $regex: RegExp };
 }
 
-const router = express.Router({ mergeParams: true });
-
-router.get('/', async (request, response) => {
+export const getAllCar = async (request: Request, response: Response): Promise<void> => {
   const { page = 1, limit = 9, sort = 'name', order = 'asc', brand, model } = request.query;
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
@@ -43,9 +41,9 @@ router.get('/', async (request, response) => {
       });
     }
   }
-});
+};
 
-router.get('/:carId', async (request, response) => {
+export const getCarById = async (request: Request, response: Response): Promise<void> => {
   const { carId } = request.params;
 
   try {
@@ -56,6 +54,4 @@ router.get('/:carId', async (request, response) => {
       message: `failed to get car for id: ${carId}`,
     });
   }
-});
-
-export default router;
+};
