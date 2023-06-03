@@ -1,6 +1,6 @@
 import { Document, Schema, Model, model } from 'mongoose';
 
-import { ICar } from '@/types/car.type';
+import { ICar } from '@/types/car.types';
 
 export interface CarModel extends Omit<ICar, '_id'>, Document {
   createdAt: Date;

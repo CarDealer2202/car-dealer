@@ -1,4 +1,4 @@
-import { IType } from './type.type';
+import { IType } from './type.types';
 
 export interface ICar {
   _id: string;

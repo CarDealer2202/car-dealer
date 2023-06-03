@@ -1,7 +1,7 @@
 import express from 'express';
 
-import carsRouter from './cars.route';
-import typesRouter from './types.route';
+import carsRouter from './cars.routes';
+import typesRouter from './types.routes';
 
 const router = express.Router({ mergeParams: true });
 

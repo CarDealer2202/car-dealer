@@ -11,7 +11,6 @@
     "paths": {
       "@/controllers/*": ["src/controllers/*"],
       "@/types/*": ["src/types/*"],
-      "@/routes/*": ["src/routes/*"],
       "@/utils/*": ["src/utils/*"],
       "@/services/*": ["src/services/*"],
       "@/routes/*": ["src/routes/*"],
