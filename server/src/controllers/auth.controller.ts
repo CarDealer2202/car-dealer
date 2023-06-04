@@ -56,6 +56,15 @@ export const loginUser = async (request: Request, response: Response): Promise<R
   const { email, password } = request.body;
 
   try {
+    const errors = validationResult(request);
+
+    if (!errors.isEmpty()) {
+      return response.status(400).json({
+        message: 'invalid data',
+        details: errors.array(),
+      });
+    }
+
     const existingUser = await User.findOne({ email });
 
     if (!existingUser) {

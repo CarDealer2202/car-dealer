@@ -7,3 +7,8 @@ export const registerValidator = [
     .trim()
     .isLength({ min: 8 }),
 ];
+
+export const loginValidator = [
+  check('email', 'invalid email').trim().isEmail(), // ? не уверен за нормализацию, она может заруинить если точки и т.д используются в почте
+  check('password', 'password is required').trim().exists(),
+];
