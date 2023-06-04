@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { loginUser, registerUser } from '@/controllers/auth.controller';
+import { loginUser, registerUser } from '@/controllers/auth.controllers';
 import { loginValidator, registerValidator } from '@/utils/validators/auth.validators';
 
 const router = express.Router({ mergeParams: true });

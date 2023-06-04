@@ -1,9 +1,9 @@
 import express from 'express';
 
-import { getAllTypes } from '@/controllers/types.controllers';
+import verification from '@/middleware/verification.middleware';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', getAllTypes);
+router.get('/', verification);
 
 export default router;

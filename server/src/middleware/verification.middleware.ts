@@ -3,7 +3,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 import tokenService from '@/services/token.service';
 
-const authMiddleware = (
+const verificationMiddleware = (
   request: Request,
   response: Response,
   next: NextFunction
@@ -38,4 +38,4 @@ const authMiddleware = (
   }
 };
 
-export default authMiddleware;
+export default verificationMiddleware;

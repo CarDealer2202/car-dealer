@@ -15,6 +15,7 @@
       "@/services/*": ["src/services/*"],
       "@/routes/*": ["src/routes/*"],
       "@/models/*": ["src/models/*"],
+      "@/middleware/*": ["src/middleware/*"],
       "@/utils/validators/*": ["src/utils/validators/*"],
       "@/utils/helpers/*": ["src/utils/helpers/*"],
       "@/db/mocks/*": ["src/db/mocks/*"]
