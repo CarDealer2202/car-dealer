@@ -10,5 +10,7 @@ export const registerValidator = [
 
 export const loginValidator = [
   check('email', 'invalid email').trim().isEmail(), // ? не уверен за нормализацию, она может заруинить если точки и т.д используются в почте
-  check('password', 'password is required').trim().exists(),
+  check('password', 'the minimum password length must be 8 characters')
+    .trim()
+    .isLength({ min: 8 }),
 ];
