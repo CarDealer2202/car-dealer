@@ -23,7 +23,6 @@ const verificationMiddleware = (
 
     const data = tokenService.validateAccess(token) as JwtPayload | null; // ОТКУДА ТУТ МОЖЕТ БЫТЬ СТРОКА, Я НЕ ПОНИМАЮ
     if (data) {
-      console.log('data: ', data);
       request.user = data;
       return next();
     } else {
@@ -32,8 +31,8 @@ const verificationMiddleware = (
       });
     }
   } catch (error) {
-    return response.status(401).json({
-      message: 'unauthorized access',
+    return response.status(500).json({
+      message: 'an error occurred on the server while processing the token',
     });
   }
 };
