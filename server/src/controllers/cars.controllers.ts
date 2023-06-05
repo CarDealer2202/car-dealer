@@ -5,7 +5,16 @@ import getAllCarsWithPagination from '@/utils/helpers/getAllCarsWithPagination';
 import getTopCarSales from '@/utils/helpers/topCarSales';
 
 export const getAllCar = async (request: Request, response: Response): Promise<Response> => {
-  const { page = 1, limit = 9, sort = 'name', order = 'asc', brand, model } = request.query;
+  const {
+    page = 1,
+    limit = 9,
+    sort = 'name',
+    order = 'asc',
+    brand,
+    model,
+    minPrice = 0,
+    maxPrice,
+  } = request.query;
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
 
@@ -20,6 +29,8 @@ export const getAllCar = async (request: Request, response: Response): Promise<R
         orderValue,
         limit: +limit,
         page: +page,
+        minPrice: +minPrice,
+        maxPrice: maxPrice as undefined,
       });
 
       return response.status(200).send({

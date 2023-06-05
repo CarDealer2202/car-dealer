@@ -5,6 +5,7 @@ interface Query {
   // brand?: { $regex: RegExp };
   brand?: { $in: RegExp[] };
   model?: { $regex: RegExp };
+  price?: { $gte: number; $lte: number } | { $gte: number };
 }
 
 interface getAllCarsWithPaginationArg {
@@ -14,6 +15,8 @@ interface getAllCarsWithPaginationArg {
   orderValue: 1 | -1;
   limit: number;
   page: number;
+  minPrice: number;
+  maxPrice: undefined;
 }
 
 const getAllCarsWithPagination = async ({
@@ -23,6 +26,8 @@ const getAllCarsWithPagination = async ({
   orderValue,
   limit,
   page,
+  minPrice,
+  maxPrice,
 }: getAllCarsWithPaginationArg): Promise<[ICar[], number]> => {
   const query: Query = {};
   if (brand) {
@@ -30,6 +35,10 @@ const getAllCarsWithPagination = async ({
     query.brand = { $in: brands.map((brand) => new RegExp(`^${brand}$`, 'i')) }; // строго марка должна совпадать, но регистр не важен
   } else if (model) {
     query.model = { $regex: new RegExp(`${model}`, 'i') };
+  } else if (minPrice && maxPrice) {
+    query.price = { $gte: minPrice, $lte: maxPrice };
+  } else if (minPrice) {
+    query.price = { $gte: minPrice };
   }
   const cars = await Car.find(query)
     .sort({ [sort as string]: orderValue })
@@ -37,7 +46,7 @@ const getAllCarsWithPagination = async ({
     .skip((+page - 1) * +limit)
     .exec();
 
-  const count = await Car.countDocuments();
+  const count = await Car.countDocuments(query);
 
   return [cars, count];
 };
