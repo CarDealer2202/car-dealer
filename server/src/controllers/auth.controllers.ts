@@ -1,9 +1,11 @@
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { JwtPayload } from 'jsonwebtoken';
 
 import User from '@/models/User';
 import tokenService from '@/services/token.service';
+import isTokenInvalid from '@/utils/helpers/isTokenInvalid';
 
 export const registerUser = async (
   request: Request,
@@ -98,5 +100,33 @@ export const loginUser = async (request: Request, response: Response): Promise<R
         message: `failed to singIn, error text: ${error}`,
       });
     }
+  }
+};
+
+export const updateTokens = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  try {
+    const { refreshToken } = request.body;
+    const data = tokenService.validateRefresh(refreshToken) as JwtPayload | null; // ? как тут возможна строка идк
+    const dbToken = await tokenService.findToken(refreshToken);
+
+    if (isTokenInvalid(data, dbToken)) {
+      return response.status(401).json({
+        message: 'unauthorized',
+      });
+    }
+
+    const tokens = await tokenService.generateTokens({
+      _id: data?._id,
+    });
+    await tokenService.save(data?._id, tokens.refreshToken);
+
+    return response.status(200).send({ ...tokens, userId: data?._id });
+  } catch (error) {
+    return response.status(500).json({
+      message: `an error occurred on the server: ${error}`,
+    });
   }
 };

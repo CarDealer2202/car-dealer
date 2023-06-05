@@ -22,7 +22,7 @@ const verificationMiddleware = (
     }
 
     const data = tokenService.validateAccess(token) as JwtPayload | null; // ОТКУДА ТУТ МОЖЕТ БЫТЬ СТРОКА, Я НЕ ПОНИМАЮ
-    if (data) {
+    if (data && data.exp && data?.exp > Math.floor(Date.now() / 1000)) {
       request.user = data;
       return next();
     } else {
