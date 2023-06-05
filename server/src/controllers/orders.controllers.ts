@@ -57,3 +57,27 @@ export const createOrder = async (request: Request, response: Response): Promise
     }
   }
 };
+
+export const deleteOrderById = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  try {
+    const { id } = request.params;
+
+    const removedOrder = await Order.findById(id);
+
+    if (removedOrder?.userId.toString() === request.user?._id) {
+      await removedOrder?.deleteOne();
+      return response.send(null);
+    } else {
+      return response.status(401).json({
+        message: 'you are not the owner of this order',
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      message: 'an error occurred on the server',
+    });
+  }
+};

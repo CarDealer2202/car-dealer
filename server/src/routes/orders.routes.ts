@@ -1,11 +1,12 @@
 import express from 'express';
 
-import { createOrder, getAllOrders } from '@/controllers/orders.controllers';
-import verification from '@/middleware/verification.middleware';
+import { createOrder, deleteOrderById, getAllOrders } from '@/controllers/orders.controllers';
+import authentication from '@/middleware/authentication.middleware';
 
 const router = express.Router({ mergeParams: true });
 
-router.get('/', verification, getAllOrders);
-router.post('/', verification, createOrder);
+router.get('/', authentication, getAllOrders);
+router.post('/', authentication, createOrder);
+router.delete('/:id', authentication, deleteOrderById);
 
 export default router;
