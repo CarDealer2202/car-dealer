@@ -1,44 +1,40 @@
 import { Request, Response } from 'express';
 
 import Car from '@/models/Car';
+import getAllCarsWithPagination from '@/utils/helpers/getAllCarsWithPagination';
+import getTopCarSales from '@/utils/helpers/topCarSales';
 
-interface Query {
-  // brand?: { $regex: RegExp };
-  brand?: { $in: RegExp[] };
-  model?: { $regex: RegExp };
-}
-
-export const getAllCar = async (request: Request, response: Response): Promise<void> => {
+export const getAllCar = async (request: Request, response: Response): Promise<Response> => {
   const { page = 1, limit = 9, sort = 'name', order = 'asc', brand, model } = request.query;
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
-    const query: Query = {};
-    if (brand) {
-      const brands = (brand as string).split(',');
-      query.brand = { $in: brands.map((brand) => new RegExp(`^${brand}$`, 'i')) }; // строго марка должна совпадать, но регистр не важен
-    } else if (model) {
-      query.model = { $regex: new RegExp(`${model}`, 'i') };
+
+    if (sort === 'sale') {
+      const topCars = await getTopCarSales(orderValue, +limit);
+      return response.status(200).send(topCars);
+    } else {
+      const [cars, count] = await getAllCarsWithPagination({
+        brand: brand as string,
+        model: model as string,
+        sort: sort as string,
+        orderValue,
+        limit: +limit,
+        page: +page,
+      });
+
+      return response.status(200).send({
+        cars,
+        totalPages: Math.ceil(count / +limit),
+        currentPage: +page,
+      });
     }
-    const cars = await Car.find(query)
-      .sort({ [sort as string]: orderValue })
-      .limit(+limit * 1)
-      .skip((+page - 1) * +limit)
-      .exec();
-
-    const count = await Car.countDocuments();
-
-    response.status(200).send({
-      cars,
-      totalPages: Math.ceil(count / +limit),
-      currentPage: +page,
-    });
   } catch (error) {
     if (error instanceof Error) {
-      response.status(500).json({
+      return response.status(500).json({
         message: `failed to get a list of machines on the server, error text: ${error.message}`,
       });
     } else {
-      response.status(500).json({
+      return response.status(500).json({
         message: `failed to get a list of machines on the server, error text: ${error}`,
       });
     }
