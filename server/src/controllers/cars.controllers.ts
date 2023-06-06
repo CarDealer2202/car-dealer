@@ -14,6 +14,7 @@ export const getAllCar = async (request: Request, response: Response): Promise<R
     model,
     minPrice = 0,
     maxPrice,
+    type,
   } = request.query;
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
@@ -26,6 +27,7 @@ export const getAllCar = async (request: Request, response: Response): Promise<R
         brand: brand as string,
         model: model as string,
         sort: sort as string,
+        type: type as string,
         orderValue,
         limit: +limit,
         page: +page,

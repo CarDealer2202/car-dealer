@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+
 import Car from '@/models/Car';
 import { ICar } from '@/types/car.types';
 
@@ -6,6 +8,7 @@ interface Query {
   brand?: { $in: RegExp[] };
   model?: { $regex: RegExp };
   price?: { $gte: number; $lte: number } | { $gte: number };
+  ['type.name']?: { 'type.name': RegExp[] };
 }
 
 interface getAllCarsWithPaginationArg {
@@ -17,6 +20,7 @@ interface getAllCarsWithPaginationArg {
   page: number;
   minPrice: number;
   maxPrice: undefined;
+  type: string;
 }
 
 const getAllCarsWithPagination = async ({
@@ -28,6 +32,7 @@ const getAllCarsWithPagination = async ({
   page,
   minPrice,
   maxPrice,
+  type,
 }: getAllCarsWithPaginationArg): Promise<[ICar[], number]> => {
   const query: Query = {};
   if (brand) {
@@ -39,9 +44,13 @@ const getAllCarsWithPagination = async ({
   }
   if (minPrice && maxPrice) {
     query.price = { $gte: minPrice, $lte: maxPrice };
-  }
-  if (minPrice) {
+  } else {
     query.price = { $gte: minPrice };
+  }
+  if (type) {
+    // query.type = type;
+    const types = (type as string).split(',');
+    query.type = { $in: types };
   }
   const cars = await Car.find(query)
     .sort({ [sort as string]: orderValue })
