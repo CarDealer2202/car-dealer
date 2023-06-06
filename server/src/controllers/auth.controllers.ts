@@ -1,4 +1,6 @@
+import axios from 'axios';
 import bcrypt from 'bcryptjs';
+import env from 'dotenv';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { JwtPayload } from 'jsonwebtoken';
@@ -6,6 +8,13 @@ import { JwtPayload } from 'jsonwebtoken';
 import User from '@/models/User';
 import tokenService from '@/services/token.service';
 import isTokenInvalid from '@/utils/helpers/isTokenInvalid';
+
+env.config();
+
+// /google
+const clientId = process.env.GOOGLE_CLIENT_ID ?? '';
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET ?? '';
+const redirectUri = process.env.GOOGLE_REDIRECT ?? '';
 
 export const registerUser = async (
   request: Request,
@@ -75,7 +84,7 @@ export const loginUser = async (request: Request, response: Response): Promise<R
       });
     }
 
-    const isPasswordEqual = await bcrypt.compare(password, existingUser.password);
+    const isPasswordEqual = await bcrypt.compare(password, existingUser.password as string);
 
     if (!isPasswordEqual) {
       return response.status(401).send({
@@ -129,4 +138,10 @@ export const updateTokens = async (
       message: `an error occurred on the server: ${error}`,
     });
   }
+};
+
+export const googleAuth = (request: Request, response: Response): void => {
+  const authURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=email profile`;
+
+  response.redirect(authURL);
 };

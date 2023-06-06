@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import Car from '@/models/Car';
 import getAllCarsWithPagination from '@/utils/helpers/getAllCarsWithPagination';
-import getTopCarSales from '@/utils/helpers/topCarSales';
+import getTopCarSales from '@/utils/helpers/getTopCarSales';
 
 export const getAllCar = async (request: Request, response: Response): Promise<Response> => {
   const {

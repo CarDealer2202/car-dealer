@@ -20,6 +20,8 @@ const getTopCarSales = async (orderValue: 1 | -1, limit: number): Promise<ICar[]
     { $replaceRoot: { newRoot: '$car' } }, // Заменяем корневой документ на поле 'car'
   ]);
 
+  // TODO я думаю можно так же вынести этот список запросов в отдельную переменную и её же подставить в подсчет списка документов для получение общего кол для пагинации
+
   return topCars;
 };
 
