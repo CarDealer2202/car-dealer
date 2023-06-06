@@ -145,3 +145,57 @@ export const googleAuth = (request: Request, response: Response): void => {
 
   response.redirect(authURL);
 };
+
+export const googleCallback = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { code } = request.query;
+
+  try {
+    // обмен кода авторизации на токен доступа
+    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+      code,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+      grant_type: 'authorization_code',
+    });
+
+    const { access_token } = tokenResponse.data;
+
+    // проверка токена доступа на валидность
+    const userInfoResponse = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`
+    );
+
+    // создание JWT токена на основе полученных данных
+    const { email, name } = userInfoResponse.data;
+
+    const existedUser = await User.findOne({ email });
+
+    let tokens;
+
+    if (!existedUser) {
+      // если пользователя нет - мы создаем его в базе и создаем токены
+      const newUser = await User.create({
+        email,
+        name,
+      });
+
+      tokens = tokenService.generateTokens({ _id: newUser._id });
+      await tokenService.save(newUser._id, tokens.refreshToken);
+
+      return response.status(201).send({ ...tokens, userId: newUser._id });
+    } else {
+      // если пользователь есть - мы берем его id и создаем токены
+      tokens = tokenService.generateTokens({ _id: existedUser._id });
+      await tokenService.save(existedUser._id, tokens.refreshToken);
+
+      return response.status(201).send({ ...tokens, userId: existedUser._id });
+    }
+  } catch (error) {
+    console.error(error);
+    return response.status(500).send({ message: "can't login with this account" });
+  }
+};
