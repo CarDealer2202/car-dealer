@@ -2,11 +2,19 @@
 import { CarItems } from "@/components/CarItems";
 import { getCars } from "@/services/getCars";
 import Link from "next/link";
+import ReactSlider from 'react-slider'
+import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
 
-type BrandOptions = {
+type CheckboxOptions = {
     [key: string]: boolean;
-  }
+}
+type Filter = {
+brand?: string[];
+search?: string;
+type?: string[];
+price?: [minPrice:number,maxPrice:number];
+}
 // type BrandOptions = [{}]  
 
 export default function Shop(){
@@ -18,11 +26,16 @@ export default function Shop(){
     const [allBrands, setAllBrands] = useState<any[]>([])
     const [allTypes, setAllTypes] = useState<any[]>([])
     const [priceBounds, setPriceBounds] = useState<{minPrice:any,maxPrice:any}>({minPrice:0,maxPrice:1})
-    const [sliderValue, setSliderValue] = useState(10000)
-    const [selectedBrands, setSelectedBrands] = useState<BrandOptions>({})
+    const [sliderValue, setSliderValue] = useState<number[]>([])
+    const [brandsState, setBrandsState] = useState<CheckboxOptions>({})
+    const [typesState, setTypesState] = useState<CheckboxOptions>({})
+    const [slectedBrands, setSelectedBrands] = useState<string[]>([])
+    const [selectedTypes, setSelectedTypes] = useState<string[]>([])
+    const [filter, setFilter] = useState<Filter>({})
 
     const handleSliderChange = (event:any) => {
-        setSliderValue(Math.floor(event.target.value));
+        console.log(event.target)
+        // setSliderValue(Math.floor(event.target.value));
       };
 
     useEffect(() => {
@@ -96,30 +109,75 @@ export default function Shop(){
             return acc;
           }, {});
         
-        setSelectedBrands(selectedBrand)
+        setBrandsState(selectedBrand)
         setAllBrands(uniqueBrands);
       }, [allCars]);
 
       const handleBrandChange = (event: any) => {
         const { name, checked } = event.target;
-        setSelectedBrands((prevOptions) => ({
+        setBrandsState((prevOptions) => ({
           ...prevOptions,   
           [name]: checked,
         }));
-        console.log("Brands state", selectedBrands)
+        
+      };
+
+
+      useEffect(() => {
+        const res = Object.keys(brandsState).filter((brand) => brandsState[brand]);
+        setSelectedBrands(res);
+        const updatedFilter = {... filter}
+        updatedFilter.brand=res
+        setFilter(updatedFilter)
+        // const fetchCars = async () => {
+        //     try {
+        //       const cars = await getCars(page, filter);
+        //       setCarItems(cars["cars"]);
+        //     } catch (error) {
+        //       console.error("Error fetching cars:", error);
+        //     } finally {
+        //       setLoading(false);
+        //     }
+        //   };
+      
+        // fetchCars();
+      }, [brandsState]);
+
+      const handleTypeChange = (event: any) => {
+        const { name, checked } = event.target;
+        setTypesState((prevOptions) => ({
+          ...prevOptions,   
+          [name]: checked,
+        }));
+        
       };
 
       useEffect(() => {
-        const res = Object.keys(selectedBrands).filter((brand) => selectedBrands[brand]);
-        console.log('Selected Brands:', res);
-      }, [selectedBrands]);
+        const res = Object.keys(typesState).filter((type) => typesState[type]);
+        setSelectedTypes(res)
+        const updatedFilter = {... filter}
+        updatedFilter.type=res
+        setFilter(updatedFilter)
+        // const fetchCars = async () => {
+        //     try {
+        //       const cars = await getCars(page, filter);
+        //       setCarItems(cars["cars"]);
+        //     } catch (error) {
+        //       console.error("Error fetching cars:", error);
+        //     } finally {
+        //       setLoading(false);
+        //     }
+        //   };
+      
+        // fetchCars();
+      }, [typesState]);
 
     function nextPage(event: any): void {
             const fetchCars = async () => {
               try {
-                const cars = await getCars(page);
+                const cars = await getCars(page+1, filter);
+                console.log(cars["cars"])
                 if(cars["currentPage"] <= cars["totalPages"]){
-                    // setCarItems([...cars["cars"]]);
                     const newCarItems = [...carItems,...cars["cars"]]
                     setCarItems(newCarItems);
                     setPage(page+1)
@@ -135,10 +193,58 @@ export default function Shop(){
             fetchCars();
     }
 
+    const handleTextboxChange = (event:any, index:any) => {
+        const { value } = event.target;
+        const updatedSliderValue = [...sliderValue];
+        updatedSliderValue[index] = Number(value);
+        setSliderValue(updatedSliderValue);
+      };
+    const updateSliderFilter = (value:any)=>{
+        const updatedFilter = {... filter}
+        updatedFilter.price=value
+        setFilter(updatedFilter)
+        // const fetchCars = async () => {
+        //     try {
+        //       const cars = await getCars(page, filter);
+        //       setCarItems(cars["cars"]);
+        //     } catch (error) {
+        //       console.error("Error fetching cars:", error);
+        //     } finally {
+        //       setLoading(false);
+        //     }
+        //   };
+      
+        // fetchCars();
+    }
+    useEffect(() => {
+        console.log(filter)
+        const fetchCars = async () => {
+            try {
+                const cars = await getCars(page, filter);
+                setCarItems(cars["cars"]);
+            } catch (error) {
+                console.error("Error fetching cars:", error);
+            } finally {
+                setLoading(false);
+            }
+            };
+            
+            fetchCars();
+      }, [filter]);
+
+      const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            const value = event.currentTarget.value;
+            const updatedFilter = {... filter}
+            updatedFilter.search = value
+            setFilter(updatedFilter)
+        }
+      };
+
     return(<>
             <div className="container">
                 <div className="search-field">
-                    <input type="text" placeholder="Search..."/>
+                    <input type="text" onKeyDown={handleSearch} placeholder="Search..."/>
                     <div className="search-buttons">
                         <button onClick={()=>setIsFilterOpened(!isFilterOpened)} className="filter-button">Фильтри</button>
                         <button className="search-button">Шукати</button>
@@ -149,20 +255,35 @@ export default function Shop(){
                         <div className="filter-column">
                         <h3>Brand</h3>
                         {allBrands.map((brand:any)=>(
-                            <label><input checked={selectedBrands[`{${brand}}`]} onChange={handleBrandChange} type="checkbox"/> {brand}</label>
+                            <label><input name={brand} checked={brandsState[`{${brand}}`]} onChange={handleBrandChange} type="checkbox"/> {brand}</label>
                         ))}
                         </div>
                         <div className="filter-column">
                         <h3>Type</h3>
                         {allTypes.map((type:any)=>(
-                            <label><input type="checkbox"/> {type.name}</label>
+                            <label><input name={type.name} checked={typesState[`{${type.name}}`]} onChange={handleTypeChange} type="checkbox"/> {type.name}</label>
                         ))}
                         </div>
                         <div className="filter-column">
                         <h3>Price Range</h3>
-                        <span>  0$</span>
-                        <input value={sliderValue} onChange={handleSliderChange} type="range" min={priceBounds.minPrice} max={priceBounds.maxPrice} step="1"/>
-                        <span>  {sliderValue}$</span>
+                        <div className="slider-field">
+                            <input defaultValue={Math.floor(priceBounds.minPrice)} onChange={(event) => handleTextboxChange(event, 0)} className="priceTexbox" type="text" name="minPrice" value={sliderValue[0]}/>
+                            <ReactSlider
+                            className="horizontal-slider"
+                            thumbClassName="example-thumb"
+                            trackClassName="example-track"
+                            renderThumb={(props, state) => <div {...props}>‎</div>}
+                            min={Math.floor(priceBounds.minPrice)}
+                            max={Math.floor(priceBounds.maxPrice)}
+                            defaultValue={[0, Math.floor(priceBounds.maxPrice)]}
+                            onChange={value=>{setSliderValue(value)}}
+                            onAfterChange={value=>updateSliderFilter(value)}
+                            value={sliderValue}
+                            pearling
+                            minDistance={10}
+                            />
+                            <input defaultValue={Math.floor(priceBounds.maxPrice)} onChange={(event) => handleTextboxChange(event, 1)} className="priceTexbox" type="text" name="maxPrice" value={sliderValue[1]}/>
+                        </div>
                         </div>
                         <hr />
                   </div>
@@ -175,7 +296,7 @@ export default function Shop(){
                             </div>
                             <div className="item-info">
                             <Link href={`/shop/${car._id}`}>{car.brand} {car.model}</Link>
-                            <p>{car.price}$</p>
+                            <p>{Math.floor(car.price)}$</p>
                             <p>{car.horsepower}</p>
                             <p>{car.max_speed}</p>
                             <p>0-100 km/h: {car.acceleration_to_100} seconds</p>

@@ -502,6 +502,43 @@ input[type="range"] {
   margin-top: 20px;
   font-size: medium;
 }
+.slider-field{
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  width: 400px;
+}
+.horizontal-slider{
+  width: 100%;
+  height: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.example-thumb{
+  width: 10px;
+  border-radius: 20%;
+  background-color: #333333e8;
+  cursor: pointer;
+}
+.example-track{
+  background: #3333334f;
+  height: 10px;
+  top: 5px;
+  border-radius: 20%;
+}
+.example-track-0, .example-track-2{
+  background: #ff525290;
+}
+.example-track-1{
+  background: #52e75f90;
+}
+.priceTexbox{
+  width: 50px;
+  border: none;
+  border-bottom: 1px solid black;
+  background-color: #f2f2f2;
+}
+
 
 
 
