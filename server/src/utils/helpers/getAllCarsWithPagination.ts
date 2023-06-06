@@ -33,11 +33,14 @@ const getAllCarsWithPagination = async ({
   if (brand) {
     const brands = (brand as string).split(',');
     query.brand = { $in: brands.map((brand) => new RegExp(`^${brand}$`, 'i')) }; // строго марка должна совпадать, но регистр не важен
-  } else if (model) {
+  }
+  if (model) {
     query.model = { $regex: new RegExp(`${model}`, 'i') };
-  } else if (minPrice && maxPrice) {
+  }
+  if (minPrice && maxPrice) {
     query.price = { $gte: minPrice, $lte: maxPrice };
-  } else if (minPrice) {
+  }
+  if (minPrice) {
     query.price = { $gte: minPrice };
   }
   const cars = await Car.find(query)
