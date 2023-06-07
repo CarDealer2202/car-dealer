@@ -197,7 +197,15 @@ export const googleCallback = async (
 
       const responseUser = createResponseUser(newUser);
 
-      return response.status(201).send({ ...tokens, user: responseUser });
+      const script = `
+      <script>
+        const data = ${JSON.stringify({ ...tokens, user: responseUser })};
+        window.opener.postMessage(data, 'http://localhost:3000');
+        window.close();
+      </script>
+      `;
+
+      return response.status(201).send(script);
     } else {
       // если пользователь есть - мы берем его id и создаем токены
       tokens = tokenService.generateTokens({ _id: existedUser._id });
@@ -205,7 +213,15 @@ export const googleCallback = async (
 
       const responseUser = createResponseUser(existedUser);
 
-      return response.status(201).send({ ...tokens, user: responseUser });
+      const script = `
+      <script>
+        const data = ${JSON.stringify({ ...tokens, user: responseUser })};
+        window.opener.postMessage(data, 'http://localhost:3000');
+        window.close();
+      </script>
+      `;
+
+      return response.status(201).send(script);
     }
   } catch (error) {
     console.error(error);
