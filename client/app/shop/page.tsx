@@ -39,6 +39,7 @@ export default function Shop(){
         // setSliderValue(Math.floor(event.target.value));
       };
 
+
     useEffect(() => {
         const fetchCars = async () => {
           try {

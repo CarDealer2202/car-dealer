@@ -2,6 +2,8 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation';
+import Router from 'next/router'
+import style from './header.module.css'
 
 type User = {
     createdAt: string;
@@ -10,8 +12,7 @@ type User = {
     updatedAt: string;
 }
 const Header = () =>{
-    const [user, setUser] = useState<User>()
-    const router = useRouter();
+    const [user, setUser] = useState<User | undefined>()
 
     useEffect(()=>{ // To fix later
         const storedUser = localStorage.getItem("user")
@@ -19,22 +20,12 @@ const Header = () =>{
             const user = JSON.parse(storedUser)
             setUser(user)
         }
-    }, [])
+    },[])
 
-    // useEffect(() => {
-    //     const handleStorageChange = (e: StorageEvent) => {
-    //         console.log(e.key)
-    //       if (e.key === "user" && e.newValue) {
-    //         const parsedUser = JSON.parse(e.newValue) as User;
-    //         console.log(parsedUser)
-    //         setUser(parsedUser);
-    //       }
-    //     };
-    
-    //     window.addEventListener("storage", handleStorageChange);
-    
-        
-    //   }, []);
+    const handlerLogOut = ()=>{
+        localStorage.clear()
+        setUser(undefined)
+    }
 
     return(
         <header>
@@ -47,10 +38,29 @@ const Header = () =>{
                 </ul>
             </nav>
             <div className="icons">
-                <a href="#">
+                <a className={style["dropdown-container"]} href="#">
                     <svg width="17" height="23" viewBox="0 0 17 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.65602 6.33334C4.65602 4.20208 6.38374 2.47436 8.51499 2.47436C10.6462 2.47436 12.374 4.20208 12.374 6.33334C12.374 8.46459 10.6462 10.1923 8.51499 10.1923C6.38374 10.1923 4.65602 8.46459 4.65602 6.33334ZM8.51499 0.858978C5.49158 0.858978 3.04063 3.30993 3.04063 6.33334C3.04063 9.35674 5.49158 11.8077 8.51499 11.8077C11.5384 11.8077 13.9893 9.35674 13.9893 6.33334C13.9893 3.30993 11.5384 0.858978 8.51499 0.858978ZM3.45293 16.3167C4.17663 15.593 5.15817 15.1864 6.18163 15.1864H10.8483C11.8718 15.1864 12.8533 15.593 13.577 16.3167C14.3007 17.0404 14.7073 18.0219 14.7073 19.0454V21.3787C14.7073 21.8248 15.0689 22.1864 15.515 22.1864C15.961 22.1864 16.3227 21.8248 16.3227 21.3787V19.0454C16.3227 17.5935 15.7459 16.2011 14.7193 15.1744C13.6926 14.1478 12.3002 13.571 10.8483 13.571H6.18163C4.72974 13.571 3.33732 14.1478 2.31068 15.1744C1.28404 16.2011 0.707275 17.5935 0.707275 19.0454V21.3787C0.707275 21.8248 1.06889 22.1864 1.51497 22.1864C1.96104 22.1864 2.32266 21.8248 2.32266 21.3787V19.0454C2.32266 18.0219 2.72923 17.0404 3.45293 16.3167Z" fill="#121212"/>
                     </svg>
+                    <div className={style["dropdown-menu"]}>
+                    {localStorage.getItem('user') ? (
+                    <>
+                    <Link href="/cart">
+                        <span className={style["dropdown-item"]}>Cart</span>
+                    </Link>
+                    <Link href="/orders">
+                        <span className={style["dropdown-item"]}>Orders</span>
+                    </Link>
+                    <button onClick={handlerLogOut}>
+                        <span className={style["dropdown-item"]}>Log out</span>
+                    </button>
+                    </>
+                    ) : (
+                    <Link href="/login" >
+                    <span className={style["dropdown-item"]}>Log in</span>
+                    </Link>
+                    )}
+                    </div>
                 </a>
                 {user && <span className="greating">Вітаємо, {user.name}</span>}
                 <a href="#">

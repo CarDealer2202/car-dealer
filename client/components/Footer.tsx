@@ -1,3 +1,9 @@
+// import instagram from '.'
+// import twitter from ".";
+// import gmail from ".";
+import Image from 'next/image';
+
+
 const Footer = () =>{
     return(
         <footer>
@@ -5,10 +11,10 @@ const Footer = () =>{
             <div className="left">
             <h2>Logo</h2>
             <div className="social-icons">
-                <a href="#"><img src="facebook-icon.png" alt="Facebook"/></a>
-                <a href="#"><img src="instagram-icon.png" alt="Instagram"/></a>
-                <a href="#"><img src="twitter-icon.png" alt="Twitter"/></a>
-                <a href="#"><img src="gmail-icon.png" alt="Gmail"/></a>
+                <a href="#"><Image width={50} height={50} src="/images/5279111_network_fb_social media_facebook_facebook logo_icon.svg" alt="Facebook"/></a>
+                <a href="#"><Image width={50} height={50} src="/images/5279112_camera_instagram_social media_instagram logo_icon.svg" alt="Instagram"/></a>
+                <a href="#"><Image width={50} height={50} src="/images/5279123_tweet_twitter_twitter logo_icon.svg" alt="Twitter"/></a>
+                <a href="#"><Image width={50} height={50} src="/images/1147408_address book_circle_contacts_email_gmail_icon.svg" alt="Gmail"/></a>
             </div>
             </div>
             <div className="right">
