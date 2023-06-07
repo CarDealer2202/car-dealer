@@ -7,6 +7,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 import User from '@/models/User';
 import tokenService from '@/services/token.service';
+import createResponseUser from '@/utils/helpers/createResponseUser';
 import isTokenInvalid from '@/utils/helpers/isTokenInvalid';
 
 env.config();
@@ -48,7 +49,9 @@ export const registerUser = async (
       const tokens = tokenService.generateTokens({ _id: newUser._id });
       await tokenService.save(newUser._id, tokens.refreshToken);
 
-      return response.status(201).send({ ...tokens, userId: newUser._id });
+      const responseUser = createResponseUser(newUser);
+
+      return response.status(201).send({ ...tokens, user: responseUser });
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -95,9 +98,11 @@ export const loginUser = async (request: Request, response: Response): Promise<R
     const tokens = tokenService.generateTokens({ _id: existingUser._id });
     await tokenService.save(existingUser._id, tokens.refreshToken);
 
+    const responseUser = createResponseUser(existingUser);
+
     return response.status(200).send({
       ...tokens,
-      userId: existingUser._id,
+      user: responseUser,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -132,7 +137,11 @@ export const updateTokens = async (
     });
     await tokenService.save(data?._id, tokens.refreshToken);
 
-    return response.status(200).send({ ...tokens, userId: data?._id });
+    const existedUser = await User.findOne({ _id: data?._id });
+
+    const responseUser = createResponseUser(existedUser);
+
+    return response.status(200).send({ ...tokens, user: responseUser });
   } catch (error) {
     return response.status(500).json({
       message: `an error occurred on the server: ${error}`,
@@ -186,13 +195,17 @@ export const googleCallback = async (
       tokens = tokenService.generateTokens({ _id: newUser._id });
       await tokenService.save(newUser._id, tokens.refreshToken);
 
-      return response.status(201).send({ ...tokens, userId: newUser._id });
+      const responseUser = createResponseUser(newUser);
+
+      return response.status(201).send({ ...tokens, user: responseUser });
     } else {
       // если пользователь есть - мы берем его id и создаем токены
       tokens = tokenService.generateTokens({ _id: existedUser._id });
       await tokenService.save(existedUser._id, tokens.refreshToken);
 
-      return response.status(201).send({ ...tokens, userId: existedUser._id });
+      const responseUser = createResponseUser(existedUser);
+
+      return response.status(201).send({ ...tokens, user: responseUser });
     }
   } catch (error) {
     console.error(error);

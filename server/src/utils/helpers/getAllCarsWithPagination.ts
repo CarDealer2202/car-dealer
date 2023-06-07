@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongoose';
-
 import Car from '@/models/Car';
 import { ICar } from '@/types/car.types';
 
@@ -8,7 +6,7 @@ interface Query {
   brand?: { $in: RegExp[] };
   model?: { $regex: RegExp };
   price?: { $gte: number; $lte: number } | { $gte: number };
-  ['type.name']?: { 'type.name': RegExp[] };
+  type?: { $in: string[] };
 }
 
 interface getAllCarsWithPaginationArg {
