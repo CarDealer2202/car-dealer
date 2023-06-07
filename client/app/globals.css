@@ -37,6 +37,16 @@ nav ul li a {
   font-size: 16px;
 }
 
+.icons{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.icons span {
+  align-self: center;
+}
+
 .icons a {
   display: inline-block;
   margin-left: 10px;
@@ -46,11 +56,11 @@ nav ul li a {
   margin-left: 0;
 }
 
-.icons svg {
+/* .icons svg {
   width: 20px;
   height: 20px;
   fill: #333;
-}
+} */
 
 /* Media queries for responsiveness */
 @media screen and (max-width: 600px) {
@@ -538,7 +548,9 @@ input[type="range"] {
   border-bottom: 1px solid black;
   background-color: #f2f2f2;
 }
-
+.greating{
+  margin-left: 5px;
+}
 
 
 

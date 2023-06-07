@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReactSlider from 'react-slider'
 import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
 
 type CheckboxOptions = {
     [key: string]: boolean;

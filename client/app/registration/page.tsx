@@ -1,5 +1,6 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css'
 
 const Login = () => {
@@ -7,8 +8,18 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("Щось не працює");
   const [name, setName] = useState("");
+  const router = useRouter();
+
+  useEffect(()=>{
+    if (localStorage.getItem('refreshToken') &&
+        localStorage.getItem('accessToken') &&
+        localStorage.getItem('expiresIn') &&
+        localStorage.getItem('user')) {
+        router.push('/shop')
+    }
+  },[])
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -32,15 +43,22 @@ const Login = () => {
       const body = {password, email, name}
       const registerResponce = await fetch(`http://localhost:8080/auth/signUp`,{method:'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify(body)})
       const result = registerResponce.body
-      console.log(registerResponce.status)
+      if (registerResponce.status == 201) {
+        const json = await registerResponce.json()
+        const currentTimeInMillis = Date.now();
+        const currentTimeInSeconds = Math.floor(currentTimeInMillis / 1000); 
+        localStorage.setItem('refreshToken', json.refreshToken)
+        localStorage.setItem('accessToken', json.accessToken)
+        localStorage.setItem('expiresIn', currentTimeInSeconds+json.expiresIn) 
+        localStorage.setItem('user', JSON.stringify(json.user))
+        router.push('/shop');
+      }
       if (registerResponce.status == 409) {
         setMessage("Email вже існує")
       }
       if (registerResponce.status == 500) {
         const json = await registerResponce.json()
         setMessage(json.message)
-      }else if(registerResponce.status != 201){
-        setMessage("Щось не працює")
       }
       setShowMessage(true)
       setTimeout(()=>setShowMessage(false),3000)
@@ -51,6 +69,10 @@ const Login = () => {
       fetchRegistration(password, email, name)
     }
   };
+
+  useEffect(()=>{
+    
+  },[message])
 
   return (
     <div className={styles["login-page"]}>
