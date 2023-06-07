@@ -1,10 +1,12 @@
 import { Document } from 'mongoose';
 
+import { ICar } from './car.types';
 import { IUser } from './user.types';
 
-export interface IToken extends Document {
+export interface IOrder extends Document {
   userId: IUser['_id'];
-  refreshToken: string;
+  cars: ICar['_id'][];
+  totalPrice: number;
   createdAt: Date;
   updatedAt: Date;
 }

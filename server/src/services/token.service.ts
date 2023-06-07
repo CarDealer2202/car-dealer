@@ -1,3 +1,4 @@
+import env from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { Types } from 'mongoose';
 
@@ -7,9 +8,11 @@ interface GenerateTokensPayload {
   _id: Types.ObjectId | null;
 }
 
+env.config();
+
 const accessKey = process.env.ACCESS_KEY ?? 'key';
 const refreshKey = process.env.REFRESH_KEY ?? 'key';
-const expiresIn = process.env.EXPIRES_IN ?? 86400;
+const expiresIn = Number(process.env.EXPIRES_IN) ?? 86400;
 
 class TokenService {
   public generateTokens(payload: GenerateTokensPayload) {

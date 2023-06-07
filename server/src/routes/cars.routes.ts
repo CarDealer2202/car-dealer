@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllCar, getCarById } from '@/controllers/cars.controller';
+import { getAllCar, getCarById } from '@/controllers/cars.controllers';
 
 const router = express.Router({ mergeParams: true });
 

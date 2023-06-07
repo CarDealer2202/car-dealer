@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getAllTypes } from '@/controllers/types.controller';
+import { getAllTypes } from '@/controllers/types.controllers';
 
 const router = express.Router({ mergeParams: true });
 

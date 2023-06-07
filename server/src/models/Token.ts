@@ -1,5 +1,6 @@
+import { model, Schema } from 'mongoose';
+
 import { IToken } from '@/types/token.types';
-import { Schema, model } from 'mongoose';
 
 const tokenSchema = new Schema(
   {

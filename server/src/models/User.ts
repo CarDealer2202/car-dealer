@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 import { IUser } from '@/types/user.types';
 
@@ -15,7 +15,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
   },
   {
