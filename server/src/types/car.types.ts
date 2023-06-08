@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+
 import { IType } from './type.types';
 
 export interface ICar {
@@ -12,6 +14,11 @@ export interface ICar {
   max_speed: number;
   acceleration_to_100: number;
   price: number;
+}
+
+export interface RequestCar {
+  carId: ObjectId;
+  color: string;
 }
 
 export const isCarArray = (data: unknown): data is ICar[] => {

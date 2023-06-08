@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { ObjectId } from 'mongoose';
 
 import Car from '@/models/Car';
 import Order from '@/models/Order';
+import { RequestCar } from '@/types/car.types';
 
 export const getAllOrders = async (
   request: Request,
@@ -30,14 +30,17 @@ export const createOrder = async (request: Request, response: Response): Promise
   try {
     const { cars } = request.body;
 
-    const totalPrice = await cars.reduce(async (totalPromise: number, carId: ObjectId) => {
-      const total = await totalPromise;
-      const currentCar = await Car.findById(carId);
-      if (!currentCar) {
-        throw new Error(`car with id ${carId} does not exist`);
-      }
-      return total + ((currentCar && currentCar.price) || 0); // ! check
-    }, Promise.resolve(0));
+    const totalPrice = await cars.reduce(
+      async (totalPromise: number, { carId }: RequestCar) => {
+        const total = await totalPromise;
+        const currentCar = await Car.findById(carId);
+        if (!currentCar) {
+          throw new Error(`car with id ${carId} does not exist`);
+        }
+        return total + ((currentCar && currentCar.price) || 0);
+      },
+      Promise.resolve(0)
+    );
 
     const newOrder = await Order.create({
       ...request.body,

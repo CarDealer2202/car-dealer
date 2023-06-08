@@ -10,12 +10,14 @@ const orderSchema: Schema = new Schema(
     },
     cars: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Car',
+        carId: { type: Schema.Types.ObjectId, ref: 'Car' },
+        color: String,
+        _id: false, // это для отключения автоматической генерации идентификатора
       },
     ],
     totalPrice: Number,
   },
+
   {
     timestamps: true,
   }
