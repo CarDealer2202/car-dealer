@@ -1,0 +1,60 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .carInfo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .carImage {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+  }
+  
+  .carImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .carDetails {
+    margin-left: 10px;
+  }
+  
+  .deleteButton {
+    padding: 10px;
+  }
+  
+  .deleteButton button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 768px) {
+    .item {
+      flex-direction: column;
+    }
+  
+    .carInfo {
+      margin-bottom: 10px;
+    }
+  
+    .deleteButton {
+      text-align: center;
+    }
+  }
+  .cart{
+    padding: 20px;
+  }
+  .submit-block{
+    
+  }

@@ -10,6 +10,12 @@ import { useRouter } from 'next/router';
 type CheckboxOptions = {
     [key: string]: boolean;
 }
+type TypesState = {
+    [id: string]: {
+      name: string;
+      checked: boolean;
+    };
+  };
 type Filter = {
 brand?: string[];
 search?: string;
@@ -29,8 +35,8 @@ export default function Shop(){
     const [priceBounds, setPriceBounds] = useState<{minPrice:any,maxPrice:any}>({minPrice:0,maxPrice:1})
     const [sliderValue, setSliderValue] = useState<number[]>([])
     const [brandsState, setBrandsState] = useState<CheckboxOptions>({})
-    const [typesState, setTypesState] = useState<CheckboxOptions>({})
-    const [slectedBrands, setSelectedBrands] = useState<string[]>([])
+    const [typesState, setTypesState] = useState<TypesState>({})
+    const [selectedBrands, setSelectedBrands] = useState<string[]>([])
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [filter, setFilter] = useState<Filter>({})
 
@@ -147,15 +153,17 @@ export default function Shop(){
 
       const handleTypeChange = (event: any) => {
         const { name, checked } = event.target;
+        const id = event.target.getAttribute('data-id');
         setTypesState((prevOptions) => ({
           ...prevOptions,   
-          [name]: checked,
+          [id]: {name, checked},
         }));
         
       };
 
       useEffect(() => {
-        const res = Object.keys(typesState).filter((type) => typesState[type]);
+        console.log(typesState)
+        const res = Object.keys(typesState).filter((type) => typesState[type].checked);
         setSelectedTypes(res)
         const updatedFilter = {... filter}
         updatedFilter.type=res
@@ -219,7 +227,7 @@ export default function Shop(){
         // fetchCars();
     }
     useEffect(() => {
-        console.log(filter)
+        
         const fetchCars = async () => {
             try {
                 const cars = await getCars(page, filter);
@@ -262,9 +270,11 @@ export default function Shop(){
                         </div>
                         <div className="filter-column">
                         <h3>Type</h3>
-                        {allTypes.map((type:any)=>(
-                            <label><input name={type.name} checked={typesState[`{${type.name}}`]} onChange={handleTypeChange} type="checkbox"/> {type.name}</label>
-                        ))}
+                        {allTypes.map((type:any)=>{
+                            return(
+                                <label key={type._id}><input data-id={type._id} name={type.name} checked={(typesState[type._id]?.checked as boolean) || false} onChange={handleTypeChange} type="checkbox"/> {type.name}</label>
+                            )
+                        })}
                         </div>
                         <div className="filter-column">
                         <h3>Price Range</h3>

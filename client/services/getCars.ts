@@ -8,6 +8,7 @@ type Filter = {
 export const getCars = async (page:number,filter?:Filter) => {
     let fetchString = `http://localhost:8080/cars?page=${page}`
     if (filter) {
+        console.log(filter)
         if (filter.price) {
             fetchString += `&minPrice=${filter.price[0]}&maxPrice=${filter.price[1]}`
         }
@@ -31,6 +32,10 @@ export const getCars = async (page:number,filter?:Filter) => {
                 const model = filter.search.split(' ')[1]
                 fetchString += `&model=${model}`
             }
+        }
+        if (filter.type && filter.type.length > 0) {
+            const typeFilter = filter.type.join(',')
+            fetchString += `&type=${typeFilter}`
         }
     }
     const cars = await fetch(fetchString)

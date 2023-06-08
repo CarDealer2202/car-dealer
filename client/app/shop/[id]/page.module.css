@@ -1,0 +1,132 @@
+.magenta{
+    background-color:magenta
+  }
+  .silver{
+    background-color:silver
+  }
+  .salmon{
+    background-color:salmon
+  }
+  .lavender{
+    background-color:lavender
+  }
+  .orchid{
+    background-color:orchid
+  }
+  .purple{
+    background-color:purple
+  }
+  .yellow{
+    background-color:yellow
+  }
+  .blue{
+    background-color:blue
+  }
+  .fuchsia{
+    background-color:fuchsia
+  }
+  .red{
+    background-color:red
+  }
+  .olive{
+    background-color:olive
+  }
+  .tan{
+    background-color:tan
+  }
+  .gold{
+    background-color:gold
+  }
+  .maroon{
+    background-color:maroon
+  }
+  .sky-blue{
+    background-color:skyblue
+  }
+  .grey{
+    background-color:grey
+  }
+  .plum{
+    background-color:plum
+  }
+  .lime{
+    background-color:lime
+  }
+  .violet{
+    background-color:violet
+  }
+  .black{
+    background-color:black
+  }
+  .cyan{
+    background-color:cyan
+  }
+  .orange{
+    background-color:orange
+  }
+  .green{
+    background-color:green
+  }
+  .azure{
+    background-color:azure
+  }
+  .red{
+    background-color:red
+  }
+  .turquoise{
+    background-color:turquoise
+  }
+  .teal{
+    background-color:teal
+  }
+
+  .color-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .color-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 30%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .selected {
+    /* Add your selected color styles here */
+    outline: 1px solid black;
+  }
+  .message-popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 5px;
+    animation: slide-in 0.3s ease-in-out forwards;
+  }
+
+  .message-popup p{
+    padding: 0;
+  }
+  
+  @keyframes slide-in {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slide-out {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }

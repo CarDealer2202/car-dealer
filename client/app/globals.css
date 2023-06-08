@@ -415,6 +415,10 @@ img{
   }
 }
 
+.car-page{
+  padding: 20px;
+}
+
 .car-top {
   display: flex;
   align-items: center;
@@ -435,18 +439,17 @@ img{
   flex-grow: 1;
 }
 
-.color-options {
+.cartAmmount{
+  width: 20px;
+  height: 20px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.color-option {
-  width: 30px;
-  height: 30px;
-  border-radius: 30%;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .order-button {
@@ -475,18 +478,8 @@ img{
   }
 }
 
-.color-red{
-  background-color:#df6363
-}
-.color-white{
-  background-color:#ffffff
-}
-.color-blue{
-  background-color:#2852E8
-}
-.color-gray{
-  background-color:#2d2d2d
-}
+
+
 
 .filter-options {
   margin-top: 20px;

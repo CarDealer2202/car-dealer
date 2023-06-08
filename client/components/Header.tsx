@@ -13,6 +13,7 @@ type User = {
 }
 const Header = () =>{
     const [user, setUser] = useState<User | undefined>()
+    const [cartAmmount, setCartAmmount] = useState(0)
 
     useEffect(()=>{ // To fix later
         const storedUser = localStorage.getItem("user")
@@ -20,6 +21,27 @@ const Header = () =>{
             const user = JSON.parse(storedUser)
             setUser(user)
         }
+        const cartItems = localStorage.getItem('cartItems')
+        if (cartItems) {
+            const cartItemsArray = JSON.parse(cartItems)
+            const itemsAmmount = cartItemsArray.length
+            setCartAmmount(itemsAmmount)
+            console.log(itemsAmmount)
+        }
+        const handleStorageChange= (event: StorageEvent) => {
+            // if (event.key === 'cartItems') {
+                const cartItems = localStorage.getItem('cartItems')
+                if (cartItems) {
+                    const cartItemsArray = JSON.parse(cartItems)
+                    const itemsAmmount = cartItemsArray.length
+                    setCartAmmount(itemsAmmount)
+                    console.log(itemsAmmount)
+                }
+                
+            // }
+          }
+          
+        window.addEventListener('storage', handleStorageChange);
     },[])
 
     const handlerLogOut = ()=>{
@@ -63,11 +85,13 @@ const Header = () =>{
                     </div>
                 </a>
                 {user && <span className="greating">Вітаємо, {user.name}</span>}
-                <a href="#">
+                <Link href="/cart">
                     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.3078 6.99999C11.3078 6.82777 11.3949 6.462 11.7488 6.13432C12.0906 5.81785 12.7521 5.47436 14.0001 5.47436C15.2481 5.47436 15.9095 5.81785 16.2513 6.13432C16.6052 6.462 16.6924 6.82777 16.6924 6.99999C16.6924 7 16.6924 7 16.6924 7V8.82019H11.3078V7C11.3078 7 11.3078 7 11.3078 6.99999ZM9.69238 6.99999C9.69239 6.39444 9.95522 5.59355 10.6513 4.94902C11.3595 4.29327 12.4481 3.85898 14.0001 3.85898C15.5521 3.85898 16.6406 4.29327 17.3488 4.94902C18.0449 5.59355 18.3078 6.39444 18.3078 6.99999C18.3078 7 18.3078 7 18.3078 7V8.82019H21.0821C21.5282 8.82019 21.8898 9.18181 21.8898 9.62789V20.661C21.8898 21.2954 21.6357 21.9024 21.1855 22.3489C20.7356 22.7953 20.1267 23.0448 19.4931 23.0448H8.3703C7.73677 23.0448 7.12787 22.7953 6.67792 22.3489C6.22774 21.9024 5.97363 21.2954 5.97363 20.661V9.62789C5.97363 9.18181 6.33525 8.82019 6.78133 8.82019H9.69238V7C9.69238 7 9.69238 7 9.69238 6.99999ZM9.69238 12.8333V10.4356H7.58902V20.661C7.58902 20.8627 7.66973 21.0574 7.81553 21.2021C7.96156 21.3469 8.16099 21.4295 8.3703 21.4295H19.4931C19.7024 21.4295 19.9019 21.3469 20.0479 21.2021C20.1937 21.0574 20.2744 20.8627 20.2744 20.661V10.4356H18.3078V12.8333H16.6924V10.4356H11.3078V12.8333H9.69238Z" fill="#121212"/>
                     </svg>
-                </a>
+                </Link>
+                {cartAmmount > 0 && <span className="cartAmmount">{cartAmmount}</span>}
+                
             </div>
             
             
