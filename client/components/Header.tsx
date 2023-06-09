@@ -29,16 +29,15 @@ const Header = () =>{
             console.log(itemsAmmount)
         }
         const handleStorageChange= (event: StorageEvent) => {
-            // if (event.key === 'cartItems') {
                 const cartItems = localStorage.getItem('cartItems')
                 if (cartItems) {
                     const cartItemsArray = JSON.parse(cartItems)
                     const itemsAmmount = cartItemsArray.length
                     setCartAmmount(itemsAmmount)
                     console.log(itemsAmmount)
+                }else{
+                    setCartAmmount(0)
                 }
-                
-            // }
           }
           
         window.addEventListener('storage', handleStorageChange);
