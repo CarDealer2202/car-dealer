@@ -29,6 +29,11 @@ const Header = () =>{
             console.log(itemsAmmount)
         }
         const handleStorageChange= (event: StorageEvent) => {
+                const storedUser = localStorage.getItem("user")
+                if (storedUser) {
+                    const user = JSON.parse(storedUser)
+                    setUser(user)
+                }
                 const cartItems = localStorage.getItem('cartItems')
                 if (cartItems) {
                     const cartItemsArray = JSON.parse(cartItems)
@@ -46,6 +51,7 @@ const Header = () =>{
     const handlerLogOut = ()=>{
         localStorage.clear()
         setUser(undefined)
+        window.dispatchEvent(new Event("storage"));
     }
 
     return(

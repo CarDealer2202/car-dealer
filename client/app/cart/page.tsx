@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useState } from 'react';
 import styles from './page.module.css'
+import { useRouter } from 'next/navigation';
+import { updateTokens } from '@/services/updateToken';
 
 type Car ={
     carId: string;
@@ -17,6 +19,7 @@ const Cart = () => {
   const [carItems, setCarItems] = useState<Car[] | undefined>([]);
   const [uniqueItems, setUniqueItems] = useState<UniqueObject[]| undefined>([]);
   const [fullPrice, setFullPrice] = useState(0);
+  const router = useRouter();
 
 
   function countUniqueObjects(arr:[]): UniqueObject[] {
@@ -58,7 +61,7 @@ const Cart = () => {
       }
 
     window.addEventListener('storage', handleStorageChange);
-  },[carItems])
+  },[])
 
   useEffect(()=>{
     if (carItems) {
@@ -101,6 +104,31 @@ const Cart = () => {
     
   };
 
+  const handlerOrderClick = ()=>{
+    const user = localStorage.getItem('user')
+    const accessToken = localStorage.getItem('accessToken')
+    if (user && carItems && accessToken) {
+        updateTokens();
+        const requestArray = carItems.map(({ carId, color }) => ({ carId, color }));
+        const requestBody = {cars:requestArray}
+        fetch(`http://localhost:8080/orders`,{method:'POST',headers: {"Authorization": `Bearer ${accessToken    }`, "Content-Type": "application/json", // adjust the content type as needed
+          }, body:JSON.stringify(requestBody)}).then(responce=>{
+            if (responce.status == 201) {
+                console.log("result create order: ", responce.status)
+                localStorage.removeItem('cartItems')
+                setUniqueItems(undefined)
+                setCarItems(undefined)
+                setFullPrice(0)
+                window.dispatchEvent(new Event("storage"));
+            }
+        })
+        
+    }
+    else{
+        router.push('/login')
+    }
+  }
+
   return (
     <main>
         <div className={styles.cart}>
@@ -123,7 +151,7 @@ const Cart = () => {
             ))}
             <div className={styles["submit-block"]}>
                 <p>Загалом: {fullPrice.toString() === '0' ? '0' : Math.floor(fullPrice)}$</p>
-                <button className={styles["order-button"]}>Замовити</button>
+                <button onClick={handlerOrderClick} className={styles["order-button"]}>Замовити</button>
             </div>
         </div>
     </main>

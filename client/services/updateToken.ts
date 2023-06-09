@@ -6,7 +6,7 @@ export const updateTokens = async () => {
         const expiresIn = parseInt(expiresInString)
         const currentTimeInSeconds = Math.floor(Date.now() / 1000);
         if (expiresIn < currentTimeInSeconds) {
-            const updateTokensRequest = await fetch('http://localhost:8080/me',{method:'POST',body:JSON.stringify({refreshToken})})
+            const updateTokensRequest = await fetch('http://localhost:8080/auth/me',{method:'POST',body:JSON.stringify({refreshToken})})
             const tokens = await updateTokensRequest.json()
             if (tokens) {
                 localStorage.setItem('accessToken', tokens.accessToken)
