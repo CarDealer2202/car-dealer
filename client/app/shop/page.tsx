@@ -6,6 +6,7 @@ import ReactSlider from 'react-slider'
 import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 type CheckboxOptions = {
     [key: string]: boolean;
@@ -55,6 +56,9 @@ export default function Shop(){
             const maxPrice = Math.max(...prices);
             const minPrice = Math.min(...prices);
             setPriceBounds({maxPrice:maxPrice,minPrice:minPrice})
+            result['cars'].map((car:any)=>{
+                console.log(car.img)
+            })
             setAllCars(result["cars"]);
           } catch (error) {
             console.error("Error fetching cars:", error);
@@ -304,7 +308,7 @@ export default function Shop(){
                     {carItems.map((car: any)=>(
                         <div key={car._id} className="item">
                             <div className="item-image">
-                            <img src="https://s3.us-east-2.amazonaws.com/dealer-inspire-vps-vehicle-images/39a7-110009639/thumbnails/large/19XFL2H80PE015266/1d878e5c02bbc7afefffe5f5581dec20.jpg" alt="Car Image"/>
+                            <Image width={100} height={100} src={`${car.img}`} alt="Car Image"/>
                             </div>
                             <div className="item-info">
                             <Link href={`/shop/${car._id}`}>{car.brand} {car.model}</Link>

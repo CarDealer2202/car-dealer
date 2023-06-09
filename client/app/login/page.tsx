@@ -54,7 +54,10 @@ const Login = () => {
         }
         return result
       }
-      fetchRegistration(password, email)
+      fetchRegistration(password, email).then(()=>{
+
+          window.dispatchEvent(new Event("storage"));
+      })
   };
 
     const handleGoogleAuth = () => {
@@ -77,6 +80,7 @@ const Login = () => {
             localStorage.setItem('expiresIn', currentTimeInSeconds+json.expiresIn) 
             localStorage.setItem('user', JSON.stringify(json.user))
             router.push('/shop');
+            window.dispatchEvent(new Event("storage"));
             if (authWindow) {
                 authWindow.close();
             }

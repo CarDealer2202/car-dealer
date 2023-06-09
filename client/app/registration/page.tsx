@@ -66,7 +66,9 @@ const Login = () => {
     }
 
     if (password === passwordCheck) {
-      fetchRegistration(password, email, name)
+      fetchRegistration(password, email, name).then(()=>{
+        window.dispatchEvent(new Event("storage"));
+      })
     }
   };
 

@@ -11,15 +11,26 @@
     display: none;
     position: absolute;
     top: 100%;
-    left: 0;
+    left: -40px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
     z-index: 1;
+    width: 100px;
+  }
+
+  .dropdown-menu button{
+    border: none;
+    cursor: pointer;
+  }
+
+  .dropdown-menu a{
+    margin-left: 0 !important;
   }
   
   .dropdown-container:hover .dropdown-menu {
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
   
   .dropdown-item {

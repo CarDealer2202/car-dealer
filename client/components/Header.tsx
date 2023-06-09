@@ -14,6 +14,7 @@ type User = {
 const Header = () =>{
     const [user, setUser] = useState<User | undefined>()
     const [cartAmmount, setCartAmmount] = useState(0)
+    const router = useRouter()
 
     useEffect(()=>{ // To fix later
         const storedUser = localStorage.getItem("user")
@@ -52,6 +53,7 @@ const Header = () =>{
         localStorage.clear()
         setUser(undefined)
         window.dispatchEvent(new Event("storage"));
+        router.push('/shop')
     }
 
     return(

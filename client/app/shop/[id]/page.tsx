@@ -3,6 +3,7 @@
 import { type } from "os";
 import { useEffect, useState } from "react";
 import style from './page.module.css'
+import Image from "next/image";
 
 async function getCar(id : string) {
     const cars = await fetch(`http://localhost:8080/cars/${id}`)
@@ -73,7 +74,7 @@ export default function Car({params: {id} }: Props){
             {car && <>
             <div className="car-top">
                 <div className="car-image">
-                    <img src="https://s3.us-east-2.amazonaws.com/dealer-inspire-vps-vehicle-images/39a7-110009639/thumbnails/large/19XFL2H80PE015266/1d878e5c02bbc7afefffe5f5581dec20.jpg" alt="Car Image"/>
+                    <Image width={100} height={100} src={car.img} alt="Car Image"/>
                 </div>
                 <div className="car-info">
                     <h2>{car.brand} {car.model}</h2>

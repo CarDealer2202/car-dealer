@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
 import { updateTokens } from '@/services/updateToken';
+import Image from 'next/image';
 
 type Car ={
     carId: string;
@@ -55,6 +56,7 @@ const Cart = () => {
         const cartItemsString = localStorage.getItem('cartItems')
         if (cartItemsString) {
             const cartItems = JSON.parse(cartItemsString)
+            console.log(countUniqueObjects(cartItems))
             setUniqueItems(countUniqueObjects(cartItems))
             setCarItems(cartItems)
         }
@@ -136,10 +138,13 @@ const Cart = () => {
                 <div key={uniqueSlot.item._id} className={styles.item}>
                 <div className={styles.carInfo}>
                     <div className={styles.carImage}>
-                    <img src={uniqueSlot.item.img} alt="Car Image" />
+                    <Image width={100} height={100} src={uniqueSlot.item.image} alt="Car Image" />
                     </div>
                     <div className={styles.carDetails}>
-                        {uniqueSlot.repetition > 1 ? <p>{`${uniqueSlot.item.name} x ${uniqueSlot.repetition}`}</p>: <p>{`${uniqueSlot.item.name}`}</p>}
+                        <div className={styles["title-set"]}>
+                            {uniqueSlot.repetition > 1 ? <p>{`${uniqueSlot.item.name} x ${uniqueSlot.repetition}`}</p>: <p>{`${uniqueSlot.item.name}`}</p>}
+                            <div className={styles[`${uniqueSlot.item.color}`]}></div>
+                        </div>
                         
                         <p>{Math.floor(uniqueSlot.item.price)}$</p>
                     </div>

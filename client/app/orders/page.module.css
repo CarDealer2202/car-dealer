@@ -1,14 +1,25 @@
-.item {
+.order {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ccc;
+    padding-left: 20px;
+    padding-right: 20px;
   }
   
-  .carInfo {
+  .order a{
+        cursor: pointer;
+  }
+  .carList {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .carItem {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
   }
   
   .carImage {
@@ -25,61 +36,54 @@
   
   .carDetails {
     margin-left: 10px;
-  }
-  
-  .deleteButton {
-    /* padding: 10px; */
-  }
-  
-  .deleteButton button {
-    /* background-color: red; */
-    /* color: white; */
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .deleteButton button:hover{
-    text-shadow: 0 0 0.01px black;
-  }
-  
-  @media (max-width: 768px) {
-    .item {
-      flex-direction: column;
-    }
-  
-    .carInfo {
-      margin-bottom: 10px;
-    }
-  
-    .deleteButton {
-      text-align: center;
-    }
-  }
-  .cart{
-    padding: 20px;
-  }
-  .submit-block{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
-  }
-  .order-button{
-    width: 100px;
-    height: 40px;
-  }
-  .title-set{
     display: flex;
     align-items: center;
   }
-  .title-set div{
+  .carDetails div{
     width: 20px;
     height: 20px;
     border-radius: 5px;
     margin-left: 5px;
   }
-
+  
+  .orderDetails {
+    text-align: right;
+    display: flex;
+    align-items: center;
+  }
+  
+  .orderDetails p {
+    /* margin-bottom: 5px; */
+    margin: 0;
+    margin-right: 20px;
+  }
+  
+  .orderDetails button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80px;
+    height: 30px;
+  }
+ 
+  
+  @media (max-width: 768px) {
+    .order {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .carItem {
+      margin-bottom: 5px;
+    }
+  
+    .orderDetails {
+      text-align: left;
+    }
+  }
+  
   .magenta{
     background-color:magenta
   }

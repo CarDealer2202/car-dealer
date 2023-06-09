@@ -278,6 +278,8 @@ a:hover{
 
 .item-image img {
   height: 200px;
+  width: 400px;
+  
 }
 
 .item-info {
