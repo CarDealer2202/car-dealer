@@ -1,7 +1,7 @@
-import Car, { CarModel } from '../models/Car';
-import Type, { TypeModel } from '../models/Type';
 import carsMock from '../mocks/Cars.json';
 import typesMock from '../mocks/Types.json';
+import Car, { CarModel } from '../models/Car';
+import Type, { TypeModel } from '../models/Type';
 import { ICar } from '../types/car.type';
 import { IType } from '../types/type.type';
 import createInitialEntity from './createInitialEntity';

@@ -9,7 +9,7 @@ export const getAllCar = async (request: Request, response: Response): Promise<R
     page = 1,
     limit = 9,
     sort = 'name',
-    order = 'asc',
+    order = 'desc',
     brand,
     model,
     minPrice = 0,
