@@ -5,7 +5,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import routes from '@/routes/index';
-import checkFullnessDB from '@/utils/helpers/checkFullnessDB';
 
 env.config();
 
@@ -22,7 +21,7 @@ app.use('/', routes); // base url
 const start = async () => {
   try {
     mongoose.connection.once('open', () => {
-      checkFullnessDB();
+      // checkFullnessDB(); // magical result when filled
     });
     await mongoose.connect(databaseURL);
     console.log(chalk.cyanBright(`MongoDB connected`));
