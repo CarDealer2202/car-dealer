@@ -91,7 +91,6 @@ const Cart = () => {
             localStorage.setItem('cartItems', JSON.stringify(updatedElements))
         }
         else{
-            console.log("else happend")
             localStorage.removeItem('cartItems')
             setUniqueItems(undefined)
             setCarItems(undefined)
