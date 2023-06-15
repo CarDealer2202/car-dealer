@@ -35,7 +35,10 @@ export const createOrder = async (request: Request, response: Response): Promise
         const total = await totalPromise;
         const currentCar = await Car.findById(carId);
         if (!currentCar) {
-          throw new Error(`car with id ${carId} does not exist`);
+          return response.status(404).json({
+            message: `car id = ${carId} does not exist`,
+            carId,
+          });
         }
         return total + ((currentCar && currentCar.price) || 0);
       },
