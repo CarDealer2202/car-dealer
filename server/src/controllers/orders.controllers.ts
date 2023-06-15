@@ -87,3 +87,40 @@ export const deleteOrderById = async (
     });
   }
 };
+
+export const updateOrderById = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { id } = request.params;
+
+  try {
+    if (!id || !request.body.status) {
+      return response.status(400).send({
+        message: 'invalid request',
+        id,
+        status: request.body.status,
+      });
+    }
+
+    const existedOrder = await Order.findById(id);
+
+    if (!existedOrder) {
+      return response.status(404).send({
+        message: `not found order with id ${id}`,
+      });
+    }
+
+    existedOrder.status = request.body.status;
+    const order = await existedOrder.save();
+
+    return response.status(200).send(order);
+  } catch (error) {
+    console.error(error);
+    return response.status(500).send({
+      message: 'an error occurred on the server side while updating the order',
+      id,
+      status: request.body.status,
+    });
+  }
+};
