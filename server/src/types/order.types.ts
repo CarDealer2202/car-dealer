@@ -9,4 +9,5 @@ export interface IOrder extends Document {
   totalPrice: number;
   createdAt: Date;
   updatedAt: Date;
+  status: 'accepted' | 'completed';
 }
