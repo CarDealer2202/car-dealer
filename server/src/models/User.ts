@@ -16,12 +16,7 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
-    favorites: [
-      {
-        carId: { type: Schema.Types.ObjectId, ref: 'Car' },
-        _id: false, // это для отключения автоматической генерации идентификатора
-      },
-    ],
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Car' }],
   },
   {
     timestamps: true,
