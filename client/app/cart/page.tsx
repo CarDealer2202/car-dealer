@@ -20,6 +20,7 @@ const Cart = () => {
   const [carItems, setCarItems] = useState<Car[] | undefined>([]);
   const [uniqueItems, setUniqueItems] = useState<UniqueObject[]| undefined>([]);
   const [fullPrice, setFullPrice] = useState(0);
+  const [inputValues, setInputValues] = useState<number[]>([]);
   const router = useRouter();
 
 
@@ -48,7 +49,7 @@ const Cart = () => {
     const cartItemsString = localStorage.getItem('cartItems')
         if (cartItemsString) {
             const cartItems = JSON.parse(cartItemsString)
-            
+            console.log("AAAAA",countUniqueObjects(cartItems))
             setUniqueItems(countUniqueObjects(cartItems))
             setCarItems(cartItems)
         }
@@ -65,23 +66,25 @@ const Cart = () => {
     window.addEventListener('storage', handleStorageChange);
   },[])
 
+  const calculateTotalPrice = (items:any) => {
+    let totalPrice = 0;
+    
+    items.forEach((item:any) => {
+      const { price } = item.item;
+      const repetition = item.repetition;
+      totalPrice += price * repetition;
+    });
+  
+    return totalPrice;
+  };
+
   useEffect(()=>{
     if (carItems) {
         const totalPrice: number = carItems.reduce((sum: number, element: Car) => {
             return sum + element.price;
           }, 0);
-        setFullPrice(totalPrice)
+        setFullPrice(calculateTotalPrice(uniqueItems))
     }
-    // const handleStorageChange= (event: StorageEvent) => {
-    //     if (carItems) {
-    //         const totalPrice: number = carItems.reduce((sum: number, element: Car) => {
-    //             return sum + element.price;
-    //           }, 0);
-    //         setFullPrice(totalPrice)
-    //     }
-    //   }
-
-    // window.addEventListener('storage', handleStorageChange);
   },[carItems])
 
   const handleDelete = (carId: string, color: string) => {
@@ -109,19 +112,30 @@ const Cart = () => {
   const handlerOrderClick = ()=>{
     const user = localStorage.getItem('user')
     const accessToken = localStorage.getItem('accessToken')
-    if (user && carItems && accessToken) {
+    if (user && uniqueItems && accessToken) {
         updateTokens();
-        const requestArray = carItems.map(({ carId, color }) => ({ carId, color }));
-        const requestBody = {cars:requestArray}
+        const carArray : any = [];
+
+        uniqueItems.forEach((item:any) => {
+            const { carId, color } = item.item;
+            const repetition = item.repetition;
+
+            for (let i = 0; i < repetition; i++) {
+            carArray.push({ carId, color });
+            }
+        });
+        // const requestArray = carItems.map(({ carId, color }) => ({ carId, color }));
+        const requestBody = {cars:carArray}
         fetch(`http://localhost:8080/orders`,{method:'POST',headers: {"Authorization": `Bearer ${accessToken    }`, "Content-Type": "application/json", // adjust the content type as needed
           }, body:JSON.stringify(requestBody)}).then(responce=>{
             if (responce.status == 201) {
                 console.log("result create order: ", responce.status)
                 localStorage.removeItem('cartItems')
-                setUniqueItems(undefined)
-                setCarItems(undefined)
+                // setUniqueItems(undefined)
+                // setCarItems(undefined)
                 setFullPrice(0)
                 window.dispatchEvent(new Event("storage"));
+                router.push('/orders')
             }
         })
         
@@ -130,11 +144,33 @@ const Cart = () => {
         router.push('/login')
     }
   }
+  useEffect(()=>{
+    setFullPrice(calculateTotalPrice(uniqueItems))
+  },[uniqueItems])
+
+  const handleChange = (event:any, index: number) => {
+    const updatedValues = [...inputValues];
+    let value = Number(event.target.value)
+    if (value < 0) {
+        value = 0
+    }
+    if (value> 100) {
+        value = 100
+    }
+    updatedValues[index] = value
+    // updatedValues[index] = event.target.value;
+    if (uniqueItems) {
+        const currentItems = [...uniqueItems]
+        currentItems[index].repetition = value
+        setUniqueItems(currentItems)
+    }
+    setInputValues(updatedValues);
+  };
 
   return (
     <main>
         <div className={styles.cart}>
-            {uniqueItems&& uniqueItems.map((uniqueSlot: any) => (
+            {uniqueItems&& uniqueItems.map((uniqueSlot: any, index : number) => (
                 <div key={uniqueSlot.item._id} className={styles.item}>
                 <div className={styles.carInfo}>
                     <div className={styles.carImage}>
@@ -142,7 +178,9 @@ const Cart = () => {
                     </div>
                     <div className={styles.carDetails}>
                         <div className={styles["title-set"]}>
-                            {uniqueSlot.repetition > 1 ? <p>{`${uniqueSlot.item.name} x ${uniqueSlot.repetition}`}</p>: <p>{`${uniqueSlot.item.name}`}</p>}
+                        <p>{`${uniqueSlot.item.name} x `}</p>
+                        <input value={inputValues[index]} onChange={(event) => handleChange(event, index)} className={styles.countInput} type="text" defaultValue={uniqueSlot.repetition}/>
+                            {/* {uniqueSlot.repetition > 1 ? <p>{`${uniqueSlot.item.name} x ${uniqueSlot.repetition}`}</p>: <p>{`${uniqueSlot.item.name}`}</p>} */}
                             <div className={styles[`${uniqueSlot.item.color}`]}></div>
                         </div>
                         
