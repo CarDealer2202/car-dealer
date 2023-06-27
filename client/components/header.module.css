@@ -1,6 +1,7 @@
 .dropdown-container {
     position: relative;
     cursor: pointer;
+    
   }
   
   .dropdown-icon {
@@ -16,12 +17,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
     z-index: 1;
-    width: 100px;
+    width: 150px;
   }
 
   .dropdown-menu button{
     border: none;
     cursor: pointer;
+    margin-top: 10px;
   }
 
   .dropdown-menu a{

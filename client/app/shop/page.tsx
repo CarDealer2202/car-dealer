@@ -1,13 +1,12 @@
 "use client";
-import { CarItems } from "@/components/CarItems";
 import { getCars } from "@/services/getCars";
 import Link from "next/link";
 import ReactSlider from 'react-slider'
 import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
-import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from './page.module.css'
+import { updateTokens } from "@/services/updateToken";
 
 type CheckboxOptions = {
     [key: string]: boolean;
@@ -26,7 +25,6 @@ price?: number[];
 sort?: string;
 sortType?: string;
 }
-// type BrandOptions = [{}]  
 
 export default function Shop(){
     const options = ["Ім'я", "Ціна(Зростання)", "Ціна(Спадання)"];
@@ -45,12 +43,8 @@ export default function Shop(){
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [filter, setFilter] = useState<Filter>({})
     const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
-
-    const handleSliderChange = (event:any) => {
-        console.log(event.target)
-        // setSliderValue(Math.floor(event.target.value));
-      };
-
+    const [isLogined, setIsLogined] = useState(false)
+    const [favouriteCars, setFavouriteCars] = useState<string[]>([])
 
     useEffect(() => {
         const fetchCars = async () => {
@@ -60,18 +54,43 @@ export default function Shop(){
             const prices = result["cars"].map((car:any) => car.price);
             const maxPrice = Math.max(...prices);
             const minPrice = Math.min(...prices);
-            setPriceBounds({maxPrice:maxPrice,minPrice:minPrice})
-            result['cars'].map((car:any)=>{
-                console.log(car.img)
-            })
+            setPriceBounds({maxPrice:maxPrice, minPrice:minPrice})
             setAllCars(result["cars"]);
+            
+            
+                              
+          
           } catch (error) {
             console.error("Error fetching cars:", error);
           }
         };
     
-        fetchCars();
+        fetchCars()
+
+        const user = localStorage.getItem('user')
+        if (user) {
+            setIsLogined(true)
+        }else{
+            setIsLogined(false)
+        }
+        const handleStorageChange = (event: StorageEvent) => {
+            const user = localStorage.getItem('user')
+            if (user) {
+                setIsLogined(true)
+            }else{
+                setIsLogined(false)
+            }
+        }
+        window.addEventListener('storage', handleStorageChange);
       }, []);
+
+    //   useEffect(()=>{
+    //     const fetchFavouriteCars = async () => {
+            
+      
+    //     fetchFavouriteCars();
+    //   },[carItems])
+
 
       useEffect(() => {
         const fetchCars = async () => {
@@ -99,7 +118,33 @@ export default function Shop(){
         const fetchCars = async () => {
           try {
             const cars = await getCars(page);
-            setCarItems(cars["cars"]);
+            updateTokens()
+            const accessToken = localStorage.getItem('accessToken')
+            const responce = await fetch(`http://localhost:8080/users`,{
+                method:'GET',
+                headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                const json = await responce.json()
+                const favouterCarIds = json.favorites.map((car:any) => car._id);  
+
+                const updatedCars = cars.map((car: any) => {
+                    if (favouriteCars.includes(car._id)) {
+                        car.isChecked = true;
+                      return car;
+                    } else {
+                        car.isChecked = false;
+                      return car;
+                    }
+                  });
+                console.log("zxczxc")
+            setCarItems(updatedCars)
+            setFavouriteCars(favouterCarIds) 
+            // const carsWithCheckedField = cars["cars"].map((car:any) => {
+            //     return {
+            //       ...car,
+            //       isChecked: false, // Add the isChecked field with initial value false
+            //     };
+            //   });
+            // setCarItems(carsWithCheckedField);
           } catch (error) {
             console.error("Error fetching cars:", error);
           } finally {
@@ -108,8 +153,7 @@ export default function Shop(){
         };
     
         fetchCars();
-        // getCars().then(setCarItems).finally
-      }, []);
+          }, []);
     
       useEffect(() => {
         let uniqueBrands: string[] = [];
@@ -147,18 +191,6 @@ export default function Shop(){
         updatedFilter.brand=res
         setPage(1)
         setFilter(updatedFilter)
-        // const fetchCars = async () => {
-        //     try {
-        //       const cars = await getCars(page, filter);
-        //       setCarItems(cars["cars"]);
-        //     } catch (error) {
-        //       console.error("Error fetching cars:", error);
-        //     } finally {
-        //       setLoading(false);
-        //     }
-        //   };
-      
-        // fetchCars();
       }, [brandsState]);
 
       const handleTypeChange = (event: any) => {
@@ -179,18 +211,6 @@ export default function Shop(){
         updatedFilter.type=res
         setPage(1)
         setFilter(updatedFilter)
-        // const fetchCars = async () => {
-        //     try {
-        //       const cars = await getCars(page, filter);
-        //       setCarItems(cars["cars"]);
-        //     } catch (error) {
-        //       console.error("Error fetching cars:", error);
-        //     } finally {
-        //       setLoading(false);
-        //     }
-        //   };
-      
-        // fetchCars();
       }, [typesState]);
 
     function nextPage(event: any): void {
@@ -200,7 +220,27 @@ export default function Shop(){
                 console.log(cars["cars"])
                 if(cars["currentPage"] <= cars["totalPages"]){
                     const newCarItems = [...carItems,...cars["cars"]]
-                    setCarItems(newCarItems);
+                    updateTokens()
+                    const accessToken = localStorage.getItem('accessToken')
+                    const responce = await fetch(`http://localhost:8080/users`,{
+                        method:'GET',
+                        headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                        const json = await responce.json()
+                        const favouterCarIds = json.favorites.map((car:any) => car._id);  
+
+                        const updatedCars = newCarItems.map((car: any) => {
+                            if (favouriteCars.includes(car._id)) {
+                                car.isChecked = true;
+                            return car;
+                            } else {
+                                car.isChecked = false;
+                            return car;
+                            }
+                        });
+                        console.log("zxczxc",updatedCars)
+
+                    setCarItems(updatedCars)
+                    setFavouriteCars(favouterCarIds)
                     setPage(page+1)
                 }
                 return;
@@ -268,7 +308,28 @@ export default function Shop(){
         const fetchCars = async () => {
             try {
                 const cars = await getCars(page, filter);
-                setCarItems(cars["cars"]);
+                console.log("zxczxc",cars)
+                updateTokens()
+                const accessToken = localStorage.getItem('accessToken')
+                const responce = await fetch(`http://localhost:8080/users`,{
+                    method:'GET',
+                    headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                    const json = await responce.json()
+                    const favouterCarIds = json.favorites.map((car:any) => car._id);  
+
+                    const updatedCars = cars.cars.map((car: any) => {
+                        if (favouriteCars.includes(car._id)) {
+                            car.isChecked = true;
+                        return car;
+                        } else {
+                            car.isChecked = false;
+                        return car;
+                        }
+                    });
+                    console.log("zxczxc",updatedCars)
+
+                setCarItems(updatedCars)
+                setFavouriteCars(favouterCarIds) 
             } catch (error) {
                 console.error("Error fetching cars:", error);
             } finally {
@@ -309,11 +370,41 @@ export default function Shop(){
         setPage(1)
         setFilter(currentFilter)
       };
+    
+      const addToFavorites = (id:string)=>{
+        const fetchAddFavouriteCar =async () => {
+            updateTokens()
+            const accessToken = localStorage.getItem('accessToken')
+            const responce = await fetch(`http://localhost:8080/users`,{
+                method:'PATCH',
+                headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` },
+                body: JSON.stringify({carId:id})})
+            console.log()
+            const json = await responce.json();
+            const newFavorites = json.favorites.map((car:any) => car._id);
+            setFavouriteCars(newFavorites)
+        }
+        fetchAddFavouriteCar();
+      }
+
+    useEffect(()=>{
+        const updatedCars = carItems.map((car: any) => {
+            if (favouriteCars.includes(car._id)) {
+                car.isChecked = true;
+              return car;
+            } else {
+                car.isChecked = false;
+              return car;
+            }
+          });
+        console.log("zxczxc")
+    setCarItems(updatedCars)
+    },[favouriteCars])
 
     return(<>
             <div className="container">
                 <div className="search-field">
-                    <input type="text" onKeyDown={handleSearch} placeholder="Search..."/>
+                    <input type="text" onKeyDown={handleSearch} placeholder="Шукаю..."/>
                     <div className="search-buttons">
                         <button onClick={()=>setIsFilterOpened(!isFilterOpened)} className="filter-button">Фильтри</button>
                         <button className="search-button">Шукати</button>
@@ -371,17 +462,24 @@ export default function Shop(){
                 </div>
                 <div className="grid">
                     {carItems.map((car: any)=>(
-                        <div key={car._id} className="item">
-                            <div className="item-image">
-                            <Image width={100} height={100} src={`${car.img}`} alt="Car Image"/>
+                        <div key={car._id} className={styles["item"]}>
+                            <div className={styles.main}>
+                                <div className={styles["item-image"]}>
+                                    <Image width={100} height={100} src={`${car.img}`} alt="Car Image"/>
+                                </div>
+                                <div className={styles["item-info"]}>
+                                    <Link href={`/shop/${car._id}`}>{car.brand} {car.model}</Link>
+                                    <p>{Math.floor(car.price)}$</p>
+                                    <p>{car.horsepower}</p>
+                                    <p>{car.max_speed}</p>
+                                    <p>0-100 km/h: {car.acceleration_to_100} seconds</p>
+                                </div>
                             </div>
-                            <div className="item-info">
-                            <Link href={`/shop/${car._id}`}>{car.brand} {car.model}</Link>
-                            <p>{Math.floor(car.price)}$</p>
-                            <p>{car.horsepower}</p>
-                            <p>{car.max_speed}</p>
-                            <p>0-100 km/h: {car.acceleration_to_100} seconds</p>
+                            {isLogined && 
+                            <div className={styles.addFav}>
+                                <button onClick={() => addToFavorites(car._id)} className={`${car.isChecked ? styles.favButtonGreen : styles.favButtonRed}`}>{car.isChecked ? "У 'Списку бажань'" : "Додати до 'Списку бажань'"}</button>
                             </div>
+                            }
                         </div>
                     ))}
                 </div>

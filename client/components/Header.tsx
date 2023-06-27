@@ -75,13 +75,16 @@ const Header = () =>{
                     {localStorage.getItem('user') ? (
                     <>
                     <Link href="/cart">
-                        <span className={style["dropdown-item"]}>Cart</span>
+                        <span className={style["dropdown-item"]}>Ковшик</span>
                     </Link>
                     <Link href="/orders">
-                        <span className={style["dropdown-item"]}>Orders</span>
+                        <span className={style["dropdown-item"]}>Замовлення</span>
+                    </Link>
+                    <Link href="/favorites">
+                        <span className={style["dropdown-item"]}>Список Бажань</span>
                     </Link>
                     <button onClick={handlerLogOut}>
-                        <span className={style["dropdown-item"]}>Log out</span>
+                        <span className={style["dropdown-item"]}>Вийти</span>
                     </button>
                     </>
                     ) : (
