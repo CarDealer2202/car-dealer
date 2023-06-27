@@ -1,0 +1,126 @@
+.sort{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin: 15px 0 5px 0;
+}
+.dropdown {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .dropdown label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .dropdown select {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Style the dropdown arrow */
+  .dropdown select::-ms-expand {
+    display: none;
+  }
+  
+  .dropdown select::after {
+    content: '▼';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  /* Style the dropdown options */
+  .dropdown select option {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  /* Optional styles for hover and focus states */
+  .dropdown select:hover,
+  .dropdown select:focus {
+    outline: none;
+    box-shadow: 0 0 4px #bbb;
+  }
+  .main{
+    display: flex;
+    
+  }
+  .addFav{
+    display: none;
+    width: 100%;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+
+ .favButtonRed{
+    border: none;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    color: #ff5252;
+ }
+ .favButtonGreen{
+    border: none;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    color: #78ff52;
+ }
+
+ .item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    padding-bottom: 10px;
+  }
+  
+  .item:hover .addFav{
+    opacity: 1;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+ .item-image {
+    padding-right: 10px;
+  }
+  
+  .item-image img {
+    height: 200px;
+    width: 400px;
+    
+  }
+  
+  .item-info {
+    flex-grow: 1;
+  }
+  
+  .item-info h3 {
+    margin: 0 0 5px;
+  }
+  
+  .item-info p {
+    margin: 0;
+  }
+  
+  /* Media queries for responsiveness */
+  @media screen and (max-width: 600px) {
+    .item {
+      flex-direction: column;
+    }
+    
+    .item-image img {
+      height: 150px;
+    }
+  }

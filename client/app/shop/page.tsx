@@ -43,7 +43,7 @@ export default function Shop(){
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [filter, setFilter] = useState<Filter>({})
     const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
-    const [isLogined, setIsLogined] = useState(false)
+    const [isLogined, setIsLogined] = useState(true)
     const [favouriteCars, setFavouriteCars] = useState<string[]>([])
 
     useEffect(() => {
@@ -56,10 +56,6 @@ export default function Shop(){
             const minPrice = Math.min(...prices);
             setPriceBounds({maxPrice:maxPrice, minPrice:minPrice})
             setAllCars(result["cars"]);
-            
-            
-                              
-          
           } catch (error) {
             console.error("Error fetching cars:", error);
           }
@@ -84,12 +80,6 @@ export default function Shop(){
         window.addEventListener('storage', handleStorageChange);
       }, []);
 
-    //   useEffect(()=>{
-    //     const fetchFavouriteCars = async () => {
-            
-      
-    //     fetchFavouriteCars();
-    //   },[carItems])
 
 
       useEffect(() => {
@@ -118,33 +108,31 @@ export default function Shop(){
         const fetchCars = async () => {
           try {
             const cars = await getCars(page);
-            updateTokens()
-            const accessToken = localStorage.getItem('accessToken')
-            const responce = await fetch(`http://localhost:8080/users`,{
-                method:'GET',
-                headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
-                const json = await responce.json()
-                const favouterCarIds = json.favorites.map((car:any) => car._id);  
-
-                const updatedCars = cars.map((car: any) => {
-                    if (favouriteCars.includes(car._id)) {
-                        car.isChecked = true;
-                      return car;
-                    } else {
-                        car.isChecked = false;
-                      return car;
-                    }
-                  });
-                console.log("zxczxc")
-            setCarItems(updatedCars)
-            setFavouriteCars(favouterCarIds) 
-            // const carsWithCheckedField = cars["cars"].map((car:any) => {
-            //     return {
-            //       ...car,
-            //       isChecked: false, // Add the isChecked field with initial value false
-            //     };
-            //   });
-            // setCarItems(carsWithCheckedField);
+            if (isLogined) {
+                updateTokens()
+                const accessToken = localStorage.getItem('accessToken')
+                const responce = await fetch(`http://localhost:8080/users`,{
+                    method:'GET',
+                    headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                    const json = await responce.json()
+                    const favouterCarIds = json.favorites.map((car:any) => car._id);  
+    
+                    const updatedCars = cars.map((car: any) => {
+                        if (favouriteCars.includes(car._id)) {
+                            car.isChecked = true;
+                          return car;
+                        } else {
+                            car.isChecked = false;
+                          return car;
+                        }
+                      });
+                    console.log("zxczxc")
+                setCarItems(updatedCars)
+                setFavouriteCars(favouterCarIds) 
+            }else{
+                setCarItems(cars)
+            }
+            
           } catch (error) {
             console.error("Error fetching cars:", error);
           } finally {
@@ -217,30 +205,33 @@ export default function Shop(){
             const fetchCars = async () => {
               try {
                 const cars = await getCars(page+1, filter);
-                console.log(cars["cars"])
                 if(cars["currentPage"] <= cars["totalPages"]){
                     const newCarItems = [...carItems,...cars["cars"]]
-                    updateTokens()
-                    const accessToken = localStorage.getItem('accessToken')
-                    const responce = await fetch(`http://localhost:8080/users`,{
-                        method:'GET',
-                        headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
-                        const json = await responce.json()
-                        const favouterCarIds = json.favorites.map((car:any) => car._id);  
-
-                        const updatedCars = newCarItems.map((car: any) => {
-                            if (favouriteCars.includes(car._id)) {
-                                car.isChecked = true;
-                            return car;
-                            } else {
-                                car.isChecked = false;
-                            return car;
-                            }
-                        });
-                        console.log("zxczxc",updatedCars)
-
-                    setCarItems(updatedCars)
-                    setFavouriteCars(favouterCarIds)
+                    if (isLogined) {
+                        updateTokens()
+                        const accessToken = localStorage.getItem('accessToken')
+                        const responce = await fetch(`http://localhost:8080/users`,{
+                            method:'GET',
+                            headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                            const json = await responce.json()
+                            const favouterCarIds = json.favorites.map((car:any) => car._id);  
+    
+                            const updatedCars = newCarItems.map((car: any) => {
+                                if (favouriteCars.includes(car._id)) {
+                                    car.isChecked = true;
+                                return car;
+                                } else {
+                                    car.isChecked = false;
+                                return car;
+                                }
+                            });
+                            console.log("zxczxc",updatedCars)
+    
+                        setCarItems(updatedCars)
+                        setFavouriteCars(favouterCarIds)
+                    }else{
+                        setCarItems(newCarItems)
+                    }
                     setPage(page+1)
                 }
                 return;
@@ -309,27 +300,31 @@ export default function Shop(){
             try {
                 const cars = await getCars(page, filter);
                 console.log("zxczxc",cars)
-                updateTokens()
-                const accessToken = localStorage.getItem('accessToken')
-                const responce = await fetch(`http://localhost:8080/users`,{
-                    method:'GET',
-                    headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
-                    const json = await responce.json()
-                    const favouterCarIds = json.favorites.map((car:any) => car._id);  
-
-                    const updatedCars = cars.cars.map((car: any) => {
-                        if (favouriteCars.includes(car._id)) {
-                            car.isChecked = true;
-                        return car;
-                        } else {
-                            car.isChecked = false;
-                        return car;
-                        }
-                    });
-                    console.log("zxczxc",updatedCars)
-
-                setCarItems(updatedCars)
-                setFavouriteCars(favouterCarIds) 
+                if (isLogined) {
+                    updateTokens()
+                    const accessToken = localStorage.getItem('accessToken')
+                    const responce = await fetch(`http://localhost:8080/users`,{
+                        method:'GET',
+                        headers: { 'Content-Type': 'application/json',"Authorization": `Bearer ${accessToken}` }})
+                        const json = await responce.json()
+                        const favouterCarIds = json.favorites.map((car:any) => car._id);  
+    
+                        const updatedCars = cars.cars.map((car: any) => {
+                            if (favouriteCars.includes(car._id)) {
+                                car.isChecked = true;
+                            return car;
+                            } else {
+                                car.isChecked = false;
+                            return car;
+                            }
+                        });
+                        console.log("zxczxc",updatedCars)
+    
+                    setCarItems(updatedCars)
+                    setFavouriteCars(favouterCarIds) 
+                }else{
+                    setCarItems(cars.cars)
+                }
             } catch (error) {
                 console.error("Error fetching cars:", error);
             } finally {
