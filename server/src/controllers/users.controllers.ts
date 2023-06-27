@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 
 import User from '@/models/User';
+import { ICar } from '@/types/car.types';
 
-export const updateUser = async (request: Request, response: Response) => {
+export const updateUser = async (request: Request, response: Response): Promise<Response> => {
   const { carId } = request.body;
   try {
-    const existedUser = await User.findOne(request.user.id);
+    const existedUser = await User.findOne(request.user.id)
+      .select('-password')
+      .populate('favorites');
 
     if (!existedUser) {
       return response.status(401).send({
@@ -19,13 +22,17 @@ export const updateUser = async (request: Request, response: Response) => {
       });
     }
 
-    if (!existedUser.favorites.includes(carId)) {
+    const carExists = existedUser.favorites.find((car) => car._id == carId);
+
+    if (!carExists) {
       existedUser.favorites.push(carId);
       const user = await existedUser.save();
 
       return response.send(user);
     } else {
-      existedUser.favorites = existedUser.favorites.filter((fav) => fav != carId);
+      existedUser.favorites = existedUser.favorites.filter((fav) => {
+        return fav._id != carId;
+      });
       const user = await existedUser.save();
 
       return response.send(user);
@@ -38,5 +45,24 @@ export const updateUser = async (request: Request, response: Response) => {
       carId,
       user: request.user,
     });
+  }
+};
+
+export const getUser = async (request: Request, response: Response): Promise<Response> => {
+  try {
+    const existedUser = await User.findOne(request.user.id)
+      .select('-password')
+      .populate('favorites');
+
+    if (existedUser) {
+      return response.send(existedUser);
+    } else {
+      return response.status(404).send({
+        message: 'user not found',
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return response.status(500).send(error);
   }
 };
