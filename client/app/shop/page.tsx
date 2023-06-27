@@ -7,6 +7,7 @@ import "rc-slider/assets/index.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import styles from './page.module.css'
 
 type CheckboxOptions = {
     [key: string]: boolean;
@@ -22,10 +23,13 @@ brand?: string[];
 search?: string;
 type?: string[];
 price?: number[];
+sort?: string;
+sortType?: string;
 }
 // type BrandOptions = [{}]  
 
 export default function Shop(){
+    const options = ["Ім'я", "Ціна(Зростання)", "Ціна(Спадання)"];
     const [carItems, setCarItems] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
@@ -40,6 +44,7 @@ export default function Shop(){
     const [selectedBrands, setSelectedBrands] = useState<string[]>([])
     const [selectedTypes, setSelectedTypes] = useState<string[]>([])
     const [filter, setFilter] = useState<Filter>({})
+    const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
 
     const handleSliderChange = (event:any) => {
         console.log(event.target)
@@ -140,6 +145,7 @@ export default function Shop(){
         setSelectedBrands(res);
         const updatedFilter = {... filter}
         updatedFilter.brand=res
+        setPage(1)
         setFilter(updatedFilter)
         // const fetchCars = async () => {
         //     try {
@@ -171,6 +177,7 @@ export default function Shop(){
         setSelectedTypes(res)
         const updatedFilter = {... filter}
         updatedFilter.type=res
+        setPage(1)
         setFilter(updatedFilter)
         // const fetchCars = async () => {
         //     try {
@@ -254,6 +261,7 @@ export default function Shop(){
         updatedFilter.price=sliderValue
         setPage(1)
         setFilter(updatedFilter)
+        console.log(selectedOptionIndex)
     }
     useEffect(() => {
         
@@ -276,8 +284,30 @@ export default function Shop(){
             const value = event.currentTarget.value;
             const updatedFilter = {... filter}
             updatedFilter.search = value
+            setPage(1)
             setFilter(updatedFilter)
         }
+      };
+
+      const handleSelectChange = (event: any) => {
+        const selectedIndex = event.target.selectedIndex;
+        setSelectedOptionIndex(parseInt(selectedIndex));
+        const currentFilter = { ...filter }
+        switch (parseInt(selectedIndex)) {
+            case 0:
+                currentFilter.sort = "brand"
+            break;
+            case 1:
+                currentFilter.sort = "price"
+                currentFilter.sortType = "asc"
+            break;
+            case 2:
+                currentFilter.sort = "price"
+                currentFilter.sortType = "desc"
+            break;
+        }
+        setPage(1)
+        setFilter(currentFilter)
       };
 
     return(<>
@@ -329,6 +359,16 @@ export default function Shop(){
                         <hr />
                   </div>
                 }
+                <div className={styles.sort}>
+                    <div className={styles.dropdown}>
+                        <label htmlFor="sort-select">Сортувати за:</label>
+                        <select value={selectedOptionIndex} onChange={handleSelectChange} id="sort-select">
+                        {options.map((option, index) => (
+                            <option key={index} value={index}>{option}</option>
+                        ))}
+                        </select>
+                    </div>
+                </div>
                 <div className="grid">
                     {carItems.map((car: any)=>(
                         <div key={car._id} className="item">

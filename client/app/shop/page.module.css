@@ -1,0 +1,50 @@
+.sort{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    margin: 15px 0 5px 0;
+}
+.dropdown {
+    display: inline-block;
+    position: relative;
+  }
+  
+  .dropdown label {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .dropdown select {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Style the dropdown arrow */
+  .dropdown select::-ms-expand {
+    display: none;
+  }
+  
+  .dropdown select::after {
+    content: '▼';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  
+  /* Style the dropdown options */
+  .dropdown select option {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  /* Optional styles for hover and focus states */
+  .dropdown select:hover,
+  .dropdown select:focus {
+    outline: none;
+    box-shadow: 0 0 4px #bbb;
+  }
+  

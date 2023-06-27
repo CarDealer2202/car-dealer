@@ -3,6 +3,8 @@ type Filter = {
     search?: string;
     type?: string[];
     price?: number[];
+    sort?: string;
+    sortType?: string;
     }
 
 export const getCars = async (page:number,filter?:Filter) => {
@@ -37,6 +39,19 @@ export const getCars = async (page:number,filter?:Filter) => {
             const typeFilter = filter.type.join(',')
             fetchString += `&type=${typeFilter}`
         }
+        if (filter.sort) {
+            if (filter.sort == "brand") {
+                fetchString += `&sort=brand&order=asc`
+            }
+            if (filter.sort == "price" && filter.sortType) {
+                fetchString += `&sort=price&order=${filter.sortType}`
+            }
+        }
+        if(!filter.sort){
+            fetchString+="&sort=brand&order=asc"
+        }
+    }else{
+        fetchString+="&sort=brand"
     }
     const cars = await fetch(fetchString)
     return cars.json();
