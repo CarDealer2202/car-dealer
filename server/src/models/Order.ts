@@ -15,9 +15,12 @@ const orderSchema: Schema = new Schema(
         _id: false, // это для отключения автоматической генерации идентификатора
       },
     ],
+    status: {
+      type: String,
+      default: 'accepted',
+    },
     totalPrice: Number,
   },
-
   {
     timestamps: true,
   }

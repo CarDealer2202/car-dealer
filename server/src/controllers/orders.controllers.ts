@@ -35,7 +35,10 @@ export const createOrder = async (request: Request, response: Response): Promise
         const total = await totalPromise;
         const currentCar = await Car.findById(carId);
         if (!currentCar) {
-          throw new Error(`car with id ${carId} does not exist`);
+          return response.status(404).json({
+            message: `car id = ${carId} does not exist`,
+            carId,
+          });
         }
         return total + ((currentCar && currentCar.price) || 0);
       },
@@ -81,6 +84,43 @@ export const deleteOrderById = async (
   } catch (error) {
     return response.status(500).json({
       message: 'an error occurred on the server',
+    });
+  }
+};
+
+export const updateOrderById = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { id } = request.params;
+
+  try {
+    if (!id || !request.body.status) {
+      return response.status(400).send({
+        message: 'invalid request',
+        id,
+        status: request.body.status,
+      });
+    }
+
+    const existedOrder = await Order.findById(id);
+
+    if (!existedOrder) {
+      return response.status(404).send({
+        message: `not found order with id ${id}`,
+      });
+    }
+
+    existedOrder.status = request.body.status;
+    const order = await existedOrder.save();
+
+    return response.status(200).send(order);
+  } catch (error) {
+    console.error(error);
+    return response.status(500).send({
+      message: 'an error occurred on the server side while updating the order',
+      id,
+      status: request.body.status,
     });
   }
 };

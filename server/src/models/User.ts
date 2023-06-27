@@ -16,6 +16,7 @@ const userSchema = new Schema(
     password: {
       type: String,
     },
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Car' }],
   },
   {
     timestamps: true,
