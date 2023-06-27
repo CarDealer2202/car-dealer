@@ -6,7 +6,7 @@ import { ICar } from '@/types/car.types';
 export const updateUser = async (request: Request, response: Response): Promise<Response> => {
   const { carId } = request.body;
   try {
-    const existedUser = await User.findOne(request.user.id)
+    const existedUser = await User.findOne({ _id: request.user._id })
       .select('-password')
       .populate('favorites');
 
@@ -22,7 +22,8 @@ export const updateUser = async (request: Request, response: Response): Promise<
       });
     }
 
-    const carExists = existedUser.favorites.find((car) => car._id == carId);
+    const favoritesCars = existedUser.favorites as ICar[];
+    const carExists = favoritesCars.find((car) => car._id == carId);
 
     if (!carExists) {
       existedUser.favorites.push(carId);
@@ -50,7 +51,7 @@ export const updateUser = async (request: Request, response: Response): Promise<
 
 export const getUser = async (request: Request, response: Response): Promise<Response> => {
   try {
-    const existedUser = await User.findOne(request.user.id)
+    const existedUser = await User.findOne({ _id: request.user._id })
       .select('-password')
       .populate('favorites');
 
