@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import styles from './page.module.css'
 import { useRouter } from 'next/navigation';
+import Link from "next/link";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -105,29 +106,7 @@ const Login = () => {
         };
       }, []);
 
-//   useEffect(() => {
-//     const handleCallback = async () => {
-//       try {
-//         // Step 2: Fetch data from the Google callback URL
-//         const response = await fetch(
-//           'http://localhost:8080/auth/google/callback' + window.location.search
-//         );
-//         const data = await response.json();
 
-//         // Step 3: Handle the acquired data
-//         // ...
-
-//         // Step 4: Redirect the user to the desired page
-//         router.push('/shop');
-//       } catch (error) {
-//         console.error('Error during Google callback:', error);
-//       }
-//     };
-
-//     if (window.location.pathname === '/auth/google/callback') {
-//       handleCallback();
-//     }
-//   }, []);
 
   return (
     <div className={styles["login-page"]}>
@@ -160,6 +139,7 @@ const Login = () => {
           </button>
         </div>
       </form>
+      <Link className={styles.regLink} href="/registration"> Немає акаунту? Зареєструватися</Link>
       {showMessage && 
       <div className={styles["message-popup"]}>
         <p>{message}</p>

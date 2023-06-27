@@ -65,6 +65,18 @@ const Login = () => {
       return result
     }
 
+    if(password.length<=8 || passwordCheck.length<=8){
+      setMessage("Пароль повинен бути більше 8 символів")
+      setShowMessage(true)
+      setTimeout(()=>setShowMessage(false),3000)
+      return;
+    }
+    if(name.length<=3){
+      setMessage("Ім'я повинне бути більше 3 символів")
+      setShowMessage(true)
+      setTimeout(()=>setShowMessage(false),3000)
+      return;
+    }
     if (password === passwordCheck) {
       fetchRegistration(password, email, name).then(()=>{
         window.dispatchEvent(new Event("storage"));

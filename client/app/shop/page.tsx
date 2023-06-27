@@ -21,7 +21,7 @@ type Filter = {
 brand?: string[];
 search?: string;
 type?: string[];
-price?: [minPrice:number,maxPrice:number];
+price?: number[];
 }
 // type BrandOptions = [{}]  
 
@@ -210,25 +210,50 @@ export default function Shop(){
     const handleTextboxChange = (event:any, index:any) => {
         const { value } = event.target;
         const updatedSliderValue = [...sliderValue];
-        updatedSliderValue[index] = Number(value);
+        let newValue = 0;
+        const Value = Number(value)
+        if(index == 0){
+            if (Value<priceBounds.minPrice) {
+                updatedSliderValue[index] = Number(Math.floor(priceBounds.minPrice));
+            }else
+            if (Value>sliderValue[1]) {
+                updatedSliderValue[1] = Value+10
+                updatedSliderValue[0] = Value
+            }else
+            if (Value>priceBounds.maxPrice) {
+                updatedSliderValue[1] = Number(Math.floor(priceBounds.maxPrice))
+                updatedSliderValue[0] = Number(Math.floor(priceBounds.maxPrice))-10
+            }else{
+                updatedSliderValue[index] = Value
+            }
+        }
+        if(index == 1){
+            if (Value<priceBounds.minPrice) {
+                updatedSliderValue[1] = Number(Math.floor(priceBounds.minPrice))+10
+                updatedSliderValue[0] = Number(Math.floor(priceBounds.minPrice))
+            }else
+            if (Value<sliderValue[0]) {
+                updatedSliderValue[1] = Value
+                updatedSliderValue[0] = Value-10
+            }else
+            if (Value>priceBounds.maxPrice) {
+                updatedSliderValue[index] = Number(Math.floor(priceBounds.maxPrice));
+            }else{
+                updatedSliderValue[index] = Value
+            }
+        }
+        // updatedSliderValue[index] = Number(value)
         setSliderValue(updatedSliderValue);
+        const updatedFilter = {... filter}
+        updatedFilter.price=updatedSliderValue
+        setPage(1)
+        setFilter(updatedFilter)
       };
     const updateSliderFilter = (value:any)=>{
         const updatedFilter = {... filter}
-        updatedFilter.price=value
+        updatedFilter.price=sliderValue
+        setPage(1)
         setFilter(updatedFilter)
-        // const fetchCars = async () => {
-        //     try {
-        //       const cars = await getCars(page, filter);
-        //       setCarItems(cars["cars"]);
-        //     } catch (error) {
-        //       console.error("Error fetching cars:", error);
-        //     } finally {
-        //       setLoading(false);
-        //     }
-        //   };
-      
-        // fetchCars();
     }
     useEffect(() => {
         
@@ -283,7 +308,7 @@ export default function Shop(){
                         <div className="filter-column">
                         <h3>Price Range</h3>
                         <div className="slider-field">
-                            <input defaultValue={Math.floor(priceBounds.minPrice)} onChange={(event) => handleTextboxChange(event, 0)} className="priceTexbox" type="text" name="minPrice" value={sliderValue[0]}/>
+                            <input defaultValue={Math.floor(priceBounds.minPrice)}  onChange={(event) => handleTextboxChange(event, 0)} className="priceTexbox" type="text" name="minPrice" value={sliderValue[0]}/>
                             <ReactSlider
                             className="horizontal-slider"
                             thumbClassName="example-thumb"
@@ -320,9 +345,6 @@ export default function Shop(){
                         </div>
                     ))}
                 </div>
-                {/* {loading && <h2>Loading... {String(loading)}</h2>} */}
-                {/* {loading ? <h2>Loading... {String(loading)}</h2> : <CarItems cars={carItems}/>} */}
-                {/* <CarItems cars={carItems}/> */}
                 <button onClick={nextPage} className="uploadButton">Загрузити ще</button>
             </div>
 </>)}

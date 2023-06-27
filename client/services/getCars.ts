@@ -2,7 +2,7 @@ type Filter = {
     brand?: string[];
     search?: string;
     type?: string[];
-    price?: [minPrice:number,maxPrice:number];
+    price?: number[];
     }
 
 export const getCars = async (page:number,filter?:Filter) => {
