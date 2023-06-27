@@ -11,9 +11,11 @@ type Order={
     totalPrice: number;
     cars: any[];
     car: any[];
+    status: string;
 }
 const Orders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [sortedCars , setSortedCars] = useState<any[]>([]);
   const router = useRouter()
 
     useEffect(()=>{
@@ -55,7 +57,39 @@ const Orders = () => {
                     .then(updatedOrders => {
                     console.log(updatedOrders);
                     setOrders(updatedOrders);
+                    const resArray: any = [];
+
+                    // Create a map to count the repetition of each car
+                    updatedOrders.forEach((order)=>{
+
+                        const groupedCars:any = {};
+                        const status = order.status
+                        const price = order.totalPrice
+                        const orderId = order._id
+                        // Group the cars by carId and color
+                        order.cars.forEach((car: any, index: number) => {
+                            const { carId, color } = car;
+                            const img = order.car[index].img
+                            const brand = order.car[index].brand
+                            const model = order.car[index].model
+                            const carKey = `${carId}_${color}`;
+                            
+                            if (groupedCars[carKey]) {
+                            groupedCars[carKey].repetition++;
+                            } else {
+                            groupedCars[carKey] = {
+                                item: { carId, color, img, brand, model },
+                                repetition: 1,
+                            };
+                            }
+                        });
+                        const newArray = Object.values(groupedCars);
+                        resArray.push({items:newArray,status,price,orderId})
                     });
+                    
+                    console.log("Res Array: ",resArray)
+                    setSortedCars(resArray)
+                    })
                 }
             })
             .catch(error => {
@@ -75,30 +109,34 @@ const Orders = () => {
                 window.dispatchEvent(new Event("storage"));
             }
     })
-    const newOrders = orders.filter((order:any)=>{
-        return order._id != orderId
+    const newOrders = sortedCars.filter((order:any)=>{
+        return order.orderId != orderId
     })
-    setOrders(newOrders)
+    setSortedCars(newOrders)
   };
 
   return (
     <main>
-      {orders.map((order: Order) => (
-        <div key={order._id} className={styles.order}>
+      {sortedCars.map((order: any) => (
+        <div className={styles.order}>
           <div className={styles.carList}>
-            {order.car.map((Car:any, index:number) => (
-              <div key={Car.id} className={styles.carItem}>
+            {order.items.map((car:any, index:number) => (
+              <div key={car.item.carId} className={styles.carItem}>
                 <div className={styles.carDetails}>
-                    <Image alt='' src={Car.img} width={100} height={100}/>
-                  <Link href={"/shop/"+`${Car._id}`}>{Car.brand} {Car.model}</Link>
-                    <div className={styles[`${order.cars[index].color}`]}></div>
+                    <Image alt='' src={car.item.img} width={100} height={100}/>
+                    <Link href={"/shop/"+`${car.item.carId}`}>{car.item.brand} {car.item.model}</Link>
+                    {car.repetition > 1 ? <p className={styles.aga}>{`x ${car.repetition}`}</p>:''}
+                    <div className={styles[`${car.item.color}`]}></div>
                 </div>
               </div>
             ))}
           </div>
           <div className={styles.orderDetails}>
-            <p>Повна ціна: {Math.floor(order.totalPrice)}$</p>
-            <button onClick={() => handleDeleteOrder(order._id)}>Скасувати</button>
+            <div className="info">
+                <p>Статус: {order.status}</p>
+                <p>Повна ціна: {Math.floor(order.price)}$</p>
+            </div>    
+            <button disabled={order.status == "completed"} onClick={() => handleDeleteOrder(order.orderId)}>Скасувати</button>
           </div>
         </div>
       ))}

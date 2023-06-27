@@ -67,6 +67,15 @@
     width: 80px;
     height: 30px;
   }
+  .orderDetails button:disabled {
+    background-color: rgb(176, 176, 176);
+    color: white;
+    border: none;
+    cursor: default;
+    border-radius: 5px;
+    width: 80px;
+    height: 30px;
+  }
  
   
   @media (max-width: 768px) {
@@ -164,4 +173,7 @@
   }
   .teal{
     background-color:teal
+  }
+  .aga{
+    margin-left: 5px;
   }
