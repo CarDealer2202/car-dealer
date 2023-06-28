@@ -53,10 +53,7 @@ export default function Home() {
         {topCars.map((car: any) => (
           <div key={car._id} className={styles.item}>
             <div className={styles.itemImage}>
-              <img
-                src="https://s3.us-east-2.amazonaws.com/dealer-inspire-vps-vehicle-images/39a7-110009639/thumbnails/large/19XFL2H80PE015266/1d878e5c02bbc7afefffe5f5581dec20.jpg"
-                alt="Car Image"
-              />
+              <Image width={100} height={100} src={car.img} alt="Car Image"/>
             </div>
             <div className={styles.itemInfo}>
               <Link href={`/shop/${car._id}`}>

@@ -48,7 +48,7 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(json.user))
           router.push('/shop');
         }
-        if (registerResponce.status == 401) {
+        if (registerResponce.status == 401 || registerResponce.status == 400) {
           setMessage("Email чи Пароль невiрнi")
           setShowMessage(true)
           setTimeout(()=>setShowMessage(false),3000)

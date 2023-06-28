@@ -81,6 +81,11 @@ const Login = () => {
       fetchRegistration(password, email, name).then(()=>{
         window.dispatchEvent(new Event("storage"));
       })
+    }else{
+      setMessage("Паролі не співпадають")
+      setShowMessage(true)
+      setTimeout(()=>setShowMessage(false),3000)
+      return;
     }
   };
 

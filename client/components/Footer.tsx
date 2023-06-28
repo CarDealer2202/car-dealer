@@ -45,7 +45,6 @@ const Footer = () =>{
                 <span>&copy; 2023 Logo</span>
             </div>
             <div className="right">
-                <img src="country-flag.png" alt="Country Flag"/>
                 <div className="dropdown">
                     <button className="dropdown-btn">Мова</button>
                     <div className="dropdown-content">

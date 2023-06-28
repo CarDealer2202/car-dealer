@@ -124,6 +124,7 @@ const Cart = () => {
             carArray.push({ carId, color });
             }
         });
+        console.log(carArray)
         // const requestArray = carItems.map(({ carId, color }) => ({ carId, color }));
         const requestBody = {cars:carArray}
         fetch(`http://localhost:8080/orders`,{method:'POST',headers: {"Authorization": `Bearer ${accessToken    }`, "Content-Type": "application/json", // adjust the content type as needed
