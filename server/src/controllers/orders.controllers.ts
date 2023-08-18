@@ -26,6 +26,34 @@ export const getAllOrders = async (
   }
 };
 
+export const getAllAdminOrders = async (
+  request: Request,
+  response: Response
+): Promise<Response> => {
+  const { page = 1, limit = 9, sort = 'createdAt', order = 'desc' } = request.query;
+
+  try {
+    const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;
+    const orders = await Order.find()
+      .sort({ [sort as string]: orderValue })
+      .limit(+limit * 1)
+      .skip((+page - 1) * +limit)
+      .exec();
+
+    const count = await Order.countDocuments();
+
+    return response.status(200).send({
+      orders,
+      totalPages: Math.ceil(count / +limit),
+      currentPage: +page,
+    });
+  } catch (error) {
+    return response.status(401).json({
+      message: 'unauthorized',
+    });
+  }
+};
+
 export const createOrder = async (request: Request, response: Response): Promise<Response> => {
   try {
     const { cars } = request.body;
