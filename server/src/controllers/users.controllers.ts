@@ -67,3 +67,22 @@ export const getUser = async (request: Request, response: Response): Promise<Res
     return response.status(500).send(error);
   }
 };
+
+
+export const getEmail = async (request: Request, response: Response): Promise<Response> => {
+  try {
+    const existedUser = await User.findOne({ _id: request.body.id })
+    .select('-password')
+      .populate('favorites');
+    if (existedUser) {
+      return response.send({email: existedUser.email});
+    } else {
+      return response.status(404).send({
+        message: 'user not found',
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return response.status(500).send(error);
+  }
+};

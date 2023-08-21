@@ -30,7 +30,7 @@ export const getAllAdminOrders = async (
   request: Request,
   response: Response
 ): Promise<Response> => {
-  const { page = 1, limit = 9, sort = 'createdAt', order = 'desc' } = request.query;
+  const { page = 1, limit = 10000, sort = 'createdAt', order = 'desc' } = request.query;
 
   try {
     const orderValue = order === 'asc' ? 1 : order === 'desc' ? -1 : -1;

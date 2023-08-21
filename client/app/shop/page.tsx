@@ -69,6 +69,7 @@ export default function Shop(){
         }else{
             setIsLogined(false)
         }
+       
         const handleStorageChange = (event: StorageEvent) => {
             const user = localStorage.getItem('user')
             if (user) {
@@ -98,10 +99,10 @@ export default function Shop(){
 
       let getAllBrands = () => {
         // const uniqueBrands = [...new Set(allCars.map(item => item.brand))];
-        console.log(allCars)
+        // console.log(allCars)
         const uniqueBrands = allCars.filter((item, index, self) => self.findIndex(obj => obj.brand === item.brand) === index)
                                   .map(item => item.brand);
-        console.log(uniqueBrands)
+        // console.log(uniqueBrands)
       };
 
     useEffect(() => {
@@ -126,7 +127,7 @@ export default function Shop(){
                           return car;
                         }
                       });
-                    console.log("zxczxc")
+                    // console.log("zxczxc")
                 setCarItems(updatedCars)
                 setFavouriteCars(favouterCarIds) 
             }else{
@@ -192,7 +193,7 @@ export default function Shop(){
       };
 
       useEffect(() => {
-        console.log(typesState)
+        // console.log(typesState)
         const res = Object.keys(typesState).filter((type) => typesState[type].checked);
         setSelectedTypes(res)
         const updatedFilter = {... filter}
@@ -225,7 +226,7 @@ export default function Shop(){
                                 return car;
                                 }
                             });
-                            console.log("zxczxc",updatedCars)
+                            // console.log("zxczxc",updatedCars)
     
                         setCarItems(updatedCars)
                         setFavouriteCars(favouterCarIds)
@@ -292,14 +293,14 @@ export default function Shop(){
         updatedFilter.price=sliderValue
         setPage(1)
         setFilter(updatedFilter)
-        console.log(selectedOptionIndex)
+        // console.log(selectedOptionIndex)
     }
     useEffect(() => {
         
         const fetchCars = async () => {
             try {
                 const cars = await getCars(page, filter);
-                console.log("zxczxc",cars)
+                // console.log("zxczxc",cars)
                 if (isLogined) {
                     updateTokens()
                     const accessToken = localStorage.getItem('accessToken')
@@ -318,7 +319,7 @@ export default function Shop(){
                             return car;
                             }
                         });
-                        console.log("zxczxc",updatedCars)
+                        // console.log("zxczxc",updatedCars)
     
                     setCarItems(updatedCars)
                     setFavouriteCars(favouterCarIds) 
@@ -392,7 +393,7 @@ export default function Shop(){
               return car;
             }
           });
-        console.log("zxczxc")
+        // console.log("zxczxc")
     setCarItems(updatedCars)
     },[favouriteCars])
 

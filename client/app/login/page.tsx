@@ -41,7 +41,8 @@ const Login = () => {
         if (registerResponce.status == 200) {
           const json = await registerResponce.json()
           const currentTimeInMillis = Date.now();
-          const currentTimeInSeconds = Math.floor(currentTimeInMillis / 1000); 
+          const currentTimeInSeconds = Math.floor(currentTimeInMillis / 1000);
+          localStorage.setItem('isModerator', json.user.isModerator) 
           localStorage.setItem('refreshToken', json.refreshToken)
           localStorage.setItem('accessToken', json.accessToken)
           localStorage.setItem('expiresIn', currentTimeInSeconds+json.expiresIn) 

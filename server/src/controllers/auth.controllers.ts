@@ -97,7 +97,6 @@ export const loginUser = async (request: Request, response: Response): Promise<R
 
     const tokens = tokenService.generateTokens({ _id: existingUser._id });
     await tokenService.save(existingUser._id, tokens.refreshToken);
-
     const responseUser = createResponseUser(existingUser);
 
     return response.status(200).send({

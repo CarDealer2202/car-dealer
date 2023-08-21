@@ -1,0 +1,184 @@
+.order {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .order a{
+        cursor: pointer;
+  }
+  .carList {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .carItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .carImage {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+  }
+
+  .obvertka{
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .carImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .carDetails {
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+  }
+  .carDetails div{
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    margin-left: 5px;
+  }
+  
+  .orderDetails {
+    text-align: right;
+    display: flex;
+    align-items: center;
+  }
+  
+  .orderDetails p {
+    /* margin-bottom: 5px; */
+    margin: 0;
+    margin-right: 20px;
+  }
+  
+  .orderDetails button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 80px;
+    height: 30px;
+  }
+  .orderDetails button:disabled {
+    background-color: rgb(176, 176, 176);
+    color: white;
+    border: none;
+    cursor: default;
+    border-radius: 5px;
+    width: 80px;
+    height: 30px;
+  }
+ 
+  
+  @media (max-width: 768px) {
+    .order {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .carItem {
+      margin-bottom: 5px;
+    }
+  
+    .orderDetails {
+      text-align: left;
+    }
+  }
+  
+  .magenta{
+    background-color:magenta
+  }
+  .silver{
+    background-color:silver
+  }
+  .salmon{
+    background-color:salmon
+  }
+  .lavender{
+    background-color:lavender
+  }
+  .orchid{
+    background-color:orchid
+  }
+  .purple{
+    background-color:purple
+  }
+  .yellow{
+    background-color:yellow
+  }
+  .blue{
+    background-color:blue
+  }
+  .fuchsia{
+    background-color:fuchsia
+  }
+  .red{
+    background-color:red
+  }
+  .olive{
+    background-color:olive
+  }
+  .tan{
+    background-color:tan
+  }
+  .gold{
+    background-color:gold
+  }
+  .maroon{
+    background-color:maroon
+  }
+  .sky-blue{
+    background-color:skyblue
+  }
+  .grey{
+    background-color:grey
+  }
+  .plum{
+    background-color:plum
+  }
+  .lime{
+    background-color:lime
+  }
+  .violet{
+    background-color:violet
+  }
+  .black{
+    background-color:black
+  }
+  .cyan{
+    background-color:cyan
+  }
+  .orange{
+    background-color:orange
+  }
+  .green{
+    background-color:green
+  }
+  .azure{
+    background-color:azure
+  }
+  .red{
+    background-color:red
+  }
+  .turquoise{
+    background-color:turquoise
+  }
+  .teal{
+    background-color:teal
+  }
+  .aga{
+    margin-left: 5px;
+  }

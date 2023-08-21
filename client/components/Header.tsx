@@ -14,6 +14,7 @@ type User = {
 const Header = () =>{
     const [user, setUser] = useState<User | undefined>()
     const [cartAmmount, setCartAmmount] = useState(0)
+    const [isModerator, setIsModerator] = useState(false)
     const router = useRouter()
 
     useEffect(()=>{ // To fix later
@@ -22,6 +23,11 @@ const Header = () =>{
             const user = JSON.parse(storedUser)
             setUser(user)
         }
+        const isModerator = localStorage.getItem('isModerator')
+                console.log(isModerator)
+                if (isModerator == "true") {
+                    setIsModerator(true)
+                }
         const cartItems = localStorage.getItem('cartItems')
         if (cartItems) {
             const cartItemsArray = JSON.parse(cartItems)
@@ -29,11 +35,17 @@ const Header = () =>{
             setCartAmmount(itemsAmmount)
             console.log(itemsAmmount)
         }
+
         const handleStorageChange= (event: StorageEvent) => {
                 const storedUser = localStorage.getItem("user")
                 if (storedUser) {
                     const user = JSON.parse(storedUser)
                     setUser(user)
+                }
+                const isModerator = localStorage.getItem('isModerator')
+                console.log(isModerator)
+                if (isModerator == "true") {
+                    setIsModerator(true)
                 }
                 const cartItems = localStorage.getItem('cartItems')
                 if (cartItems) {
@@ -83,6 +95,11 @@ const Header = () =>{
                     <Link href="/favorites">
                         <span className={style["dropdown-item"]}>Список Бажань</span>
                     </Link>
+                    {isModerator && 
+                    <Link href="/moderation">
+                        <span className={style["dropdown-item"]}>Модерація</span>
+                    </Link>
+                    }
                     <button onClick={handlerLogOut}>
                         <span className={style["dropdown-item"]}>Вийти</span>
                     </button>

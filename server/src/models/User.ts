@@ -13,6 +13,10 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
+    isModerator:{
+      type: Boolean,
+      default: false
+    },
     password: {
       type: String,
     },
